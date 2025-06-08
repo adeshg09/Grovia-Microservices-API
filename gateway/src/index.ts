@@ -24,7 +24,7 @@ app.get("/health", (req, res) => {
 // Proxy routes to services
 app.use(
   "/api/v1/auth",
-  expressProxy("http://localhost:8001", {
+  expressProxy(process.env.AUTH_SERVICE_URL || "http://localhost:8001", {
     proxyReqPathResolver: (req) => `/api/v1/auth${req.url}`,
   })
 );
@@ -35,6 +35,7 @@ app.use(
     proxyReqPathResolver: (req) => `/api/v1/customer${req.url}`,
   })
 );
+
 app.use(
   "/api/v1/captain",
   expressProxy(process.env.CAPTAIN_SERVICE_URL || "http://localhost:8003", {
