@@ -46,6 +46,7 @@ export const RESPONSE_SUCCESS_MESSAGES = {
   OTP_SENT: "OTP sent successfully",
   OTP_VERIFIED: "OTP verified successfully",
   OTP_RESENT: "OTP resent successfully",
+  USER_DETAILS_FETCHED: "User details fetched successfully",
 };
 
 export const RESPONSE_ERROR_MESSAGES = {

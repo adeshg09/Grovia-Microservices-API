@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import AuthRouter from "./routes/auth.routes";
+import UserRouter from "./routes/user.routes";
 import { envConfig } from "./config/env.config";
 import { connectToDatabase } from "./config/db.config";
 
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/auth", AuthRouter);
+app.use("/api/v1/auth/user", UserRouter);
 
 // ======================
 // 4. Health Check
