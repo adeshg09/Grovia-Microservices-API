@@ -47,7 +47,10 @@ const publishToQueue = async (queueName: string, data: any) => {
 
   try {
     await channel.assertQueue(queueName, { durable: true });
-    const isSent = channel.sendToQueue(queueName, Buffer.from(data));
+    const isSent = channel.sendToQueue(
+      queueName,
+      Buffer.from(typeof data === "object" ? JSON.stringify(data) : data)
+    );
     if (isSent) {
       console.log(`Message sent to queue ${queueName}`);
     } else {

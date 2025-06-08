@@ -3,6 +3,7 @@ dotenv.config();
 
 export const envConfig = {
   AUTH_SERVICE_PORT: process.env.PORT || 8001,
+  CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:8000",
   MONGODB_URI: process.env.MONGODB_URI,
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || "access_secret",
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || "refresh_secret",
