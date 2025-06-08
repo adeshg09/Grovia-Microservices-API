@@ -1,4 +1,4 @@
-import amqp, { Channel } from "amqplib";
+import amqp, { Channel, ConsumeMessage } from "amqplib";
 
 let channel: Channel | undefined;
 
@@ -27,7 +27,7 @@ const subscribeToQueue = async (
     await channel.assertQueue(queueName, { durable: true });
     console.log(`Subscribed to queue: ${queueName}`);
 
-    channel.consume(queueName, (msg) => {
+    channel.consume(queueName, (msg: ConsumeMessage | null) => {
       if (msg) {
         callback(msg);
         if (channel) {
