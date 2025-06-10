@@ -1,12 +1,11 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
-import AuthRouter from "./routes/auth.routes";
-import UserRouter from "./routes/user.routes";
 import { envConfig } from "./config/env.config";
 import { connectToDatabase } from "./config/db.config";
+import { userCreatedConsumer } from "./consumers/user.consumer";
 import { connectRabbitMQ } from "./utils/rabbitmq";
-import { seedSuperadmin } from "./scripts";
+import AdminRouter from "./routes/admin.routes";
 
 // Initialize Express app
 const app = express();
@@ -32,31 +31,31 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/v1/auth", AuthRouter);
-app.use("/api/v1/auth/users", UserRouter);
+app.use("/api/v1/admin", AdminRouter);
 
 // ======================
 //  Health Check
 // ======================
 app.get("/health", (req: Request, res: Response) => {
-  res.send("Auth Service OK");
+  res.send("Customer Service OK");
 });
 
 // ======================
 //  Server Startup
 // ======================
-const PORT = envConfig.AUTH_SERVICE_PORT || 8001;
+const PORT = envConfig.ADMIN_SERVICE_PORT;
 
 const startServer = async () => {
   try {
     await connectToDatabase();
     await connectRabbitMQ();
-    await seedSuperadmin();
+    await userCreatedConsumer();
+
     app.listen(PORT, () => {
-      console.log(`🚀 Auth service running on port ${PORT}`);
+      console.log(`🚀 Admin service running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ Error starting Auth service:", error);
+    console.error("❌ Error starting Admin service:", error);
     process.exit(1);
   }
 };

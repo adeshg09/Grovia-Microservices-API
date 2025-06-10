@@ -1,7 +1,8 @@
 export enum USER_ROLES {
   CUSTOMER = "customer",
   CAPTAIN = "captain",
-  ADMIN = "admin",
+  SUPER_ADMIN = "super-admin",
+  OUTLET_ADMIN = "outlet-admin",
 }
 
 export enum USER_STATUS {
@@ -47,10 +48,12 @@ export const RESPONSE_SUCCESS_MESSAGES = {
   OTP_VERIFIED: "OTP verified successfully",
   OTP_RESENT: "OTP resent successfully",
   USER_DETAILS_FETCHED: "User details fetched successfully",
+  USER_CREATED: "User created successfully",
 };
 
 export const RESPONSE_ERROR_MESSAGES = {
   REQUIRED_FIELDS: "All the Fields are required",
+  ACCESS_TOKEN_REQUIRED: "Access Token is required",
   TOKEN_INVALID: "Invalid or expired token",
   OTP_ATTEMPTS_EXCEEDED: "Maximum OTP attempts reached",
   INVALID_COUNTRYCODE_FORMAT: "Country code must start with + (e.g. +91)",

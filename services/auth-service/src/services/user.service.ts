@@ -1,8 +1,8 @@
+import { createUserDto } from "../dtos/user.dtos";
 import { User } from "../models/auth.user.model";
 
-export const getUserDetailsByIdService = async (userId: string) => {
+export const getUserByIdService = async (userId: string) => {
   const user = await User.findById(userId);
-  console.log("userData", user);
 
   const userData = {
     userId: user?._id,
@@ -14,4 +14,19 @@ export const getUserDetailsByIdService = async (userId: string) => {
   };
 
   return userData ? userData : null;
+};
+
+export const createUserService = async (createUserData: createUserDto) => {
+  const { phoneNumber, role, status, isActivated, isPhoneVerified } =
+    createUserData;
+
+  const user = await User.create({
+    phoneNumber,
+    role,
+    status,
+    isActivated,
+    isPhoneVerified,
+  });
+
+  return user;
 };

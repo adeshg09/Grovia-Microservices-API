@@ -1,14 +1,14 @@
-export enum AddressType {
-  HOME = "home",
-  WORK = "work",
-  OTHER = "other",
-}
-
 export enum USER_ROLES {
   CUSTOMER = "customer",
   CAPTAIN = "captain",
   SUPER_ADMIN = "super-admin",
   OUTLET_ADMIN = "outlet-admin",
+}
+
+export enum USER_STATUS {
+  ACTIVE = "active",
+  PENDING = "pending",
+  BLOCKED = "blocked",
 }
 
 export const STATUS_CODES = {
@@ -32,20 +32,17 @@ export const RESPONSE_MESSAGES = {
 };
 
 export const RESPONSE_SUCCESS_MESSAGES = {
-  CUSTOMER_PROFILE_CREATED: "Customer profile created successfully",
-  CUSTOMER_PROFILE_UPDATED: "Customer profile updated successfully",
-  CUSTOMER_PROFILE_DELETED: "Customer profile deleted successfully",
-  CUSTOMER_PROFILE_FETCHED: "Customer profile fetched successfully",
-  ADDRESS_ADDED: "Address added successfully",
-  ADDRESS_UPDATED: "Address updated successfully",
-  ADDRESS_DELETED: "Address deleted successfully",
-  ADDRESS_FETCHED: "Address fetched successfully",
+  PROFILE_CREATED: "Profile created successfully",
+  PROFILE_UPDATED: "Profile updated successfully",
+  PROFILE_DELETED: "Profile deleted successfully",
+  PROFILE_FETCHED: "Profile fetched successfully",
+  ADMIN_DETAILS_FETCHED: "Admin details fetched successfully",
 };
 
 export const RESPONSE_ERROR_MESSAGES = {
   REQUIRED_FIELDS: "All the Fields are required",
   ACCESS_TOKEN_REQUIRED: "Access Token is required",
   TOKEN_INVALID: "Invalid or expired token",
-  CUSTOMER_PROFILE_EXISTS: "Customer profile already exists",
-  CUSTOMER_PROFILE_NOT_FOUND: "Customer profile not found",
+  ADMIN_PROFILE_NOT_FOUND: "Admin profile not found",
+  ADMIN_PROFILE_EXISTS: "Admin profile already exists",
 };

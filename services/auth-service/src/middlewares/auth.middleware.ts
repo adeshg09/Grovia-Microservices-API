@@ -22,6 +22,7 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
+  console.log("auth token", token);
 
   if (!token) {
     return errorResponse(
