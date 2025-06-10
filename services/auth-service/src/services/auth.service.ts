@@ -14,7 +14,6 @@ export const initiateSendOtp = async (otpData: OtpDTO) => {
   }
 
   const response = await sendOTPViaTwilio(phoneNumber, countryCode, channel);
-  console.log("OTP sent successfully:", response);
   return response;
 };
 
@@ -35,6 +34,7 @@ export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
   let user = await User.findOne({ phoneNumber: formattedPhone });
 
   if (!user) {
+    console.log("check");
     if (!role) {
       throw new Error(RESPONSE_ERROR_MESSAGES.ROLE_REQUIRED);
     } else if (!Object.values(USER_ROLES).includes(role)) {

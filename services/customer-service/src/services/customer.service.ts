@@ -3,8 +3,9 @@ import { RESPONSE_ERROR_MESSAGES, USER_ROLES } from "../constants";
 import { createCustomerProfileDto } from "../dtos/customer.dtos";
 import { Customer } from "../models/customer.model";
 import { envConfig } from "../config/env.config";
+import { authClient } from "../config/axios.config";
 
-export const createCustomerProfile = async (
+export const createCustomerProfileService = async (
   createCustomerProfileData: createCustomerProfileDto,
   userId: string
 ) => {
@@ -47,14 +48,12 @@ export const createCustomerProfile = async (
   };
 };
 
-export const getCustomerProfile = async (userId: string) => {
+export const getCustomerProfile = async (userId: string, token: string) => {
   const customerData = await Customer.findOne({ userId: userId }).populate(
     "addresses"
   );
 
-  const response = await axios.get(
-    `${envConfig.AUTH_SERVICE_URL}/user/user-details/${userId}`
-  );
+  const response = await authClient.get(`/users/user-details/${userId}`, token);
 
   const { data: customerUserData } = response.data;
 

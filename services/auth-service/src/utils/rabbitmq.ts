@@ -5,10 +5,11 @@ let channel: Channel | undefined;
 const connectRabbitMQ = async () => {
   try {
     const connection = await amqp.connect(
-      process.env.RABBITMQ_URL || "amqp://localhost"
+      process.env.RABBITMQ_URL ||
+        "amqps://iagzlamp:e8PBqsiKpinXGxxpgCEAYGEYeiyh9vo_@possum.lmq.cloudamqp.com/iagzlamp"
     );
     channel = await connection.createChannel();
-    console.log("Connected to RabbitMQ");
+    console.log("✅Connected to RabbitMQ");
   } catch (error) {
     console.error("Failed to connect RabbitMQ", error);
     process.exit(1);

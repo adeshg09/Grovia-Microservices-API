@@ -7,7 +7,8 @@ export enum AddressType {
 export enum USER_ROLES {
   CUSTOMER = "customer",
   CAPTAIN = "captain",
-  ADMIN = "admin",
+  SUPER_ADMIN = "super-admin",
+  OUTLET_ADMIN = "outlet-admin",
 }
 
 export const STATUS_CODES = {

@@ -1,12 +1,19 @@
 /// <reference path="../types/express/index.d.ts" />
 
 import { Router } from "express";
-import { sendOtp, verifyOtp } from "../controllers/auth.controller";
-import { get } from "http";
-import { getUserDetailsById } from "../controllers/user.controller";
+import { createUser, getUserById } from "../controllers/user.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.get("/user-details/:userId", getUserDetailsById);
+router.post("/create-user", createUser);
+
+// router.put("/update-user/:userId", updateUser);
+
+// router.delete("/delete-user/:userId", deleteUser);
+
+router.get("/get-user-by-id/:userId", getUserById);
+
+// router.get("/get-all-users", authenticate, getAllUsers);
 
 export default router;

@@ -1,18 +1,22 @@
 import { Request, Response } from "express";
 import { successResponse, errorResponse } from "../utils/response";
 import {
+  RESPONSE_ERROR_MESSAGES,
   RESPONSE_MESSAGES,
   RESPONSE_SUCCESS_MESSAGES,
   STATUS_CODES,
 } from "../constants";
 import {
-  createCustomerProfile,
+  createCustomerProfileService,
   getCustomerProfile,
 } from "../services/customer.service";
 
-export const createProfile = async (req: Request, res: Response) => {
+export const createCustomerProfile = async (req: Request, res: Response) => {
   try {
-    const { customer } = await createCustomerProfile(req.body, req.user?.id);
+    const { customer } = await createCustomerProfileService(
+      req.body,
+      req.user?.id
+    );
     return successResponse(
       res,
       STATUS_CODES.OK,
@@ -33,7 +37,18 @@ export const createProfile = async (req: Request, res: Response) => {
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    const customerProfile = await getCustomerProfile(req.user?.id);
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return errorResponse(
+        res,
+        STATUS_CODES.UNAUTHORIZED,
+        RESPONSE_MESSAGES.UNAUTHORIZED,
+        RESPONSE_ERROR_MESSAGES.ACCESS_TOKEN_REQUIRED,
+        {}
+      );
+    }
+    const customerProfile = await getCustomerProfile(req.user?.id, token);
     return successResponse(
       res,
       STATUS_CODES.OK,
