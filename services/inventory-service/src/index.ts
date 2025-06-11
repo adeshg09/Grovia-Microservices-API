@@ -11,6 +11,7 @@ import ProductRequestRouter from "./routes/productRequest.routes";
 import { envConfig } from "./config/env.config";
 import { connectToDatabase } from "./config/db.config";
 import { connectRabbitMQ } from "./utils/rabbitmq";
+import { defaultOutletAdminCreatedConsumer } from "./consumers/defaultOutletAdmin.consumer";
 
 // Initialize Express app
 const app = express();
@@ -58,6 +59,7 @@ const startServer = async () => {
   try {
     await connectToDatabase();
     await connectRabbitMQ();
+    await defaultOutletAdminCreatedConsumer();
     app.listen(PORT, () => {
       console.log(`🚀 Inventory service running on port ${PORT}`);
     });

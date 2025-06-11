@@ -20,4 +20,5 @@ export const envConfig = {
   SUPER_ADMIN_First_Name: process.env.SUPER_ADMIN_FIRST_NAME,
   SUPER_ADMIN_LAST_Name: process.env.SUPER_ADMIN_LAST_NAME,
   SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL,
+  DEFAULT_OUTLET_ADMIN_EMAIL: process.env.DEFAULT_OUTLET_ADMIN_EMAIL,
 };

@@ -1,5 +1,5 @@
 import { Schema, model, Document } from "mongoose";
-import { OUTLET_STATUS } from "../constants";
+import { OUTLET_STATUS, OUTLET_TYPE } from "../constants";
 
 export interface IOutlet extends Document {
   adminId?: Schema.Types.ObjectId;
@@ -16,7 +16,9 @@ export interface IOutlet extends Document {
   contactNumber: string;
   captains: Schema.Types.ObjectId[];
   status: OUTLET_STATUS;
+  type: OUTLET_TYPE;
   isActive: boolean;
+  isDefault: boolean;
 }
 
 const OutletSchema = new Schema<IOutlet>(
@@ -52,13 +54,19 @@ const OutletSchema = new Schema<IOutlet>(
         ref: "Captain",
       },
     ],
-    status: {
+    type: {
       type: String,
       required: true,
+      enum: Object.values(OUTLET_TYPE),
+      default: OUTLET_TYPE.SECONDARY,
+    },
+    status: {
+      type: String,
       enum: Object.values(OUTLET_STATUS),
       default: OUTLET_STATUS.OPEN,
     },
     isActive: { type: Boolean, default: true },
+    isDefault: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
