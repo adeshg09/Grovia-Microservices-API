@@ -18,6 +18,10 @@ export enum OUTLET_STATUS {
   CLOSED = "closed",
   UNDER_MAINTENANCE = "under_maintenance",
 }
+export enum OUTLET_TYPE {
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+}
 
 export enum PRODUCT_STATUS {
   AVAILABLE = "available",

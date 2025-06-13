@@ -43,6 +43,20 @@ app.use(
   })
 );
 
+app.use(
+  "/api/v1/admin",
+  expressProxy(process.env.ADMIN_SERVICE_URL || "http://localhost:8004", {
+    proxyReqPathResolver: (req) => `/api/v1/admin${req.url}`,
+  })
+);
+
+app.use(
+  "/api/v1/inventory",
+  expressProxy(process.env.INVENTORY_SERVICE_URL || "http://localhost:8005", {
+    proxyReqPathResolver: (req) => `/api/v1/inventory${req.url}`,
+  })
+);
+
 app.listen(process.env.GATEWAY_PORT || 8000, () => {
   console.log(`🚀 Gateway running on port ${process.env.GATEWAY_PORT}`);
 });
