@@ -31,7 +31,7 @@ export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
   }
 
   const formattedPhone = formatPhoneNumber(phoneNumber, countryCode);
-  let user = await User.findOne({ phoneNumber: formattedPhone });
+  let user = await User.findOne({ phoneNumber: formattedPhone, role: role });
 
   if (!user) {
     user = await User.create({
