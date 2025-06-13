@@ -21,7 +21,7 @@ export const initiateSendOtp = async (otpData: OtpDTO) => {
 export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
   const { phoneNumber, countryCode, otp, role } = verifyOtpData;
 
-  if (!phoneNumber || !countryCode || !otp) {
+  if (!phoneNumber || !countryCode || !otp || !role) {
     throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
   }
 
@@ -34,13 +34,6 @@ export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
   let user = await User.findOne({ phoneNumber: formattedPhone });
 
   if (!user) {
-    console.log("check");
-    if (!role) {
-      throw new Error(RESPONSE_ERROR_MESSAGES.ROLE_REQUIRED);
-    } else if (!Object.values(USER_ROLES).includes(role)) {
-      throw new Error(RESPONSE_ERROR_MESSAGES.INVALID_ROLE);
-    }
-
     user = await User.create({
       phoneNumber: formattedPhone,
       role,
