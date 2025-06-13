@@ -11,7 +11,7 @@ import { connectRabbitMQ } from "./utils/rabbitmq";
 const app = express();
 
 // ======================
-// 1. Middleware Setup
+// Middleware Setup
 // ======================
 app.use(
   cors({
@@ -19,30 +19,32 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
+
 app.use(helmet()); // Security headers
+
 app.use(express.json()); // Parse JSON bodies
 
 // ======================
-// 3. Routes
+// Routes
 // ======================
-
 app.use((req, res, next) => {
   console.log(`Incoming request: ${req.method} ${req.url}`);
   next();
 });
 
 app.use("/api/v1/customer", CustomerRouter);
+
 app.use("/api/v1/customer/addresses", AddressRouter);
 
 // ======================
-// 4. Health Check
+// Health Check
 // ======================
 app.get("/health", (req: Request, res: Response) => {
   res.send("Customer Service OK");
 });
 
 // ======================
-// 4. Server Startup
+// Server Startup
 // ======================
 const PORT = envConfig.CUSTOMER_SERVICE_PORT || 8002;
 
