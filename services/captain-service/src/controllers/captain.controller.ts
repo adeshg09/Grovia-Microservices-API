@@ -13,11 +13,38 @@ import {
   selectOutletService,
   selectVehicleTypeService,
   uploadLiveSelfieService,
+  upsertBankDetailsService,
+  upsertCaptainProfileService,
+  upsertOutletService,
+  upsertVehicleTypeService,
 } from "../services/captain.service";
 
 export const createCaptainProfile = async (req: Request, res: Response) => {
   try {
     const { captain } = await createCaptainProfileService(
+      req.body,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.CAPTAIN_PROFILE_CREATED,
+      { captain }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+export const upsertCaptainProfile = async (req: Request, res: Response) => {
+  try {
+    const { captain } = await upsertCaptainProfileService(
       req.body,
       req.user?.id
     );
@@ -95,6 +122,32 @@ export const selectVehicleType = async (req: Request, res: Response) => {
   }
 };
 
+export const upsertVehicleType = async (req: Request, res: Response) => {
+  try {
+    const { updatedVehicleType } = await upsertVehicleTypeService(
+      req.body?.vehicleType,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      null,
+      {
+        vehicleType: updatedVehicleType,
+      }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
 export const selectOutlet = async (req: Request, res: Response) => {
   try {
     const { selectedOutletId } = await selectOutletService(
@@ -107,6 +160,32 @@ export const selectOutlet = async (req: Request, res: Response) => {
       RESPONSE_MESSAGES.SUCCESS,
       null,
       { selectedOutlet: selectedOutletId }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
+export const upsertOutlet = async (req: Request, res: Response) => {
+  try {
+    const { updatedOutletId } = await upsertOutletService(
+      req.body?.outletId,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      null,
+      {
+        outletId: updatedOutletId,
+      }
     );
   } catch (error: any) {
     return errorResponse(
@@ -156,6 +235,30 @@ export const addBankDetails = async (req: Request, res: Response) => {
       RESPONSE_MESSAGES.SUCCESS,
       RESPONSE_SUCCESS_MESSAGES.BANK_DETAILS_ADDED,
       { captain: updatedCaptain }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
+export const upsertBankDetails = async (req: Request, res: Response) => {
+  try {
+    const { updatedBankDetails } = await upsertBankDetailsService(
+      req.body,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      null,
+      { bankDetails: updatedBankDetails }
     );
   } catch (error: any) {
     return errorResponse(

@@ -8,6 +8,10 @@ import {
   selectOutlet,
   selectVehicleType,
   uploadLiveSelfie,
+  upsertBankDetails,
+  upsertCaptainProfile,
+  upsertOutlet,
+  upsertVehicleType,
 } from "../controllers/captain.controller";
 import { authenticate, authorize } from "../middlewares/auth.middleware";
 import { USER_ROLES } from "../constants";
@@ -20,6 +24,13 @@ router.post(
   authenticate,
   authorize([USER_ROLES.CAPTAIN]),
   createCaptainProfile
+);
+
+router.post(
+  "/upsert-captain-profile",
+  authenticate,
+  authorize([USER_ROLES.CAPTAIN]),
+  upsertCaptainProfile
 );
 
 // router.put(
@@ -71,18 +82,31 @@ router.get(
 //   updateProfile
 // );
 
+// router.post(
+//   "/select-vehicle-type",
+//   authenticate,
+//   authorize([USER_ROLES.CAPTAIN]),
+//   selectVehicleType
+// );
 router.post(
   "/select-vehicle-type",
   authenticate,
   authorize([USER_ROLES.CAPTAIN]),
-  selectVehicleType
+  upsertVehicleType
 );
+
+// router.post(
+//   "/select-outlet",
+//   authenticate,
+//   authorize([USER_ROLES.CAPTAIN]),
+//   selectOutlet
+// );
 
 router.post(
   "/select-outlet",
   authenticate,
   authorize([USER_ROLES.CAPTAIN]),
-  selectOutlet
+  upsertOutlet
 );
 
 router.post(
@@ -93,11 +117,18 @@ router.post(
   uploadLiveSelfie
 );
 
+// router.post(
+//   "/add-bank-details",
+//   authenticate,
+//   authorize([USER_ROLES.CAPTAIN]),
+//   addBankDetails
+// );
+
 router.post(
   "/add-bank-details",
   authenticate,
   authorize([USER_ROLES.CAPTAIN]),
-  addBankDetails
+  upsertBankDetails
 );
 
 //  router.patch("/update-profile-picture",authenticate,

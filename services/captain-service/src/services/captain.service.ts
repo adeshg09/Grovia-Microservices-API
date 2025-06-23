@@ -53,6 +53,60 @@ export const createCaptainProfileService = async (
     },
   };
 };
+export const upsertCaptainProfileService = async (
+  createCaptainProfileData: createCaptainProfileDto,
+  userId: string
+) => {
+  const { firstName, lastName, email, profileImage, dob, gender } =
+    createCaptainProfileData;
+
+  const captainUserId = userId;
+
+  let captain = await Captain.findOne({ userId: captainUserId });
+
+  if (!captain && (!firstName || !lastName || !email)) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
+  }
+
+  if (captain) {
+    // Update existing
+    captain.firstName = firstName;
+    captain.lastName = lastName;
+    captain.email = email.toLowerCase();
+    captain.profileImage = profileImage ?? captain.profileImage;
+    captain.dob = dob ?? captain.dob;
+    captain.gender = (gender as typeof captain.gender) ?? captain.gender;
+  } else {
+    // Create new
+    captain = new Captain({
+      userId: captainUserId,
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      profileImage,
+      dob,
+      gender,
+      isKYCComplete: false,
+      isDocumentsVerified: false,
+      isApprovedByOutletAdmin: false,
+      isActive: false,
+    });
+  }
+
+  await captain.save();
+
+  return {
+    captain: {
+      userId: captain.userId,
+      firstName: captain.firstName,
+      lastName: captain.lastName,
+      email: captain.email,
+      profileImage: captain.profileImage,
+      dob: captain.dob,
+      gender: captain.gender,
+    },
+  };
+};
 
 export const getCaptainProfile = async (userId: string, token: string) => {
   const captainData = await Captain.findOne({ userId: userId });
@@ -97,6 +151,24 @@ export const selectVehicleTypeService = async (
   };
 };
 
+export const upsertVehicleTypeService = async (
+  vehicleType: VehicleType,
+  userId: string
+) => {
+  const captain = await Captain.findOne({ userId });
+
+  if (!captain) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
+  }
+
+  captain.vehicleType = vehicleType ?? captain.vehicleType;
+  await captain.save();
+
+  return {
+    updatedVehicleType: captain.vehicleType,
+  };
+};
+
 export const selectOutletService = async (outletId: string, userId: string) => {
   const captain = await Captain.findOne({ userId });
 
@@ -107,6 +179,22 @@ export const selectOutletService = async (outletId: string, userId: string) => {
 
   return {
     selectedOutletId: captain.outletId,
+  };
+};
+
+export const upsertOutletService = async (outletId: string, userId: string) => {
+  const captain = await Captain.findOne({ userId });
+
+  if (!captain) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
+  }
+
+  captain.outletId =
+    (new (mongoose as any).Types.ObjectId(outletId) as any) ?? captain.outletId;
+  await captain.save();
+
+  return {
+    updatedOutletId: captain.outletId,
   };
 };
 
@@ -136,6 +224,27 @@ export const addBankDetailsService = async (
       gender: captain.gender,
       bankDetails: captain.bankDetails,
     },
+  };
+};
+
+export const upsertBankDetailsService = async (
+  data: addBankDetailsDto,
+  userId: string
+) => {
+  const captain = await Captain.findOne({ userId });
+
+  if (!captain) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
+  }
+
+  captain.bankDetails = {
+    ...captain.bankDetails,
+    ...data.bankDetails,
+  };
+  await captain.save();
+
+  return {
+    updatedBankDetails: captain.bankDetails,
   };
 };
 
