@@ -107,22 +107,22 @@ export const getAllOutletDetailsService = async (
 
   const outlets = await Promise.all(
     outletsData.map(async (outlet) => {
-      const response = await adminClient.get(
-        `/get-outlet-admin-profile-by-id/${outlet.adminId}`,
-        token
-      );
-      const { data: adminData } = response.data;
+      // const response = await adminClient.get(
+      //   `/get-outlet-admin-profile-by-id/${outlet.adminId}`,
+      //   token
+      // );
+      // const { data: adminData } = response.data;
 
       return {
         id: outlet?._id,
-        adminId: {
-          id: adminData?.id,
-          userId: adminData?.userId,
-          firstName: adminData?.firstName,
-          lastName: adminData?.lastName,
-          email: adminData?.email,
-          profileImage: adminData?.profileImage,
-        },
+        // adminId: {
+        //   id: adminData?.id,
+        //   userId: adminData?.userId,
+        //   firstName: adminData?.firstName,
+        //   lastName: adminData?.lastName,
+        //   email: adminData?.email,
+        //   profileImage: adminData?.profileImage,
+        // },
         name: outlet?.name,
         address: outlet?.address,
         city: outlet?.city,
