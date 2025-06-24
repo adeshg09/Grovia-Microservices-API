@@ -6,6 +6,7 @@ import { connectToDatabase } from "./config/db.config";
 import { userCreatedConsumer } from "./consumers/user.consumer";
 import { connectRabbitMQ } from "./utils/rabbitmq";
 import AdminRouter from "./routes/admin.routes";
+import { initModels } from "./utils/initModels";
 
 // Initialize Express app
 const app = express();
@@ -49,6 +50,7 @@ const PORT = envConfig.ADMIN_SERVICE_PORT;
 const startServer = async () => {
   try {
     await connectToDatabase();
+    await initModels();
     await connectRabbitMQ();
     await userCreatedConsumer();
 

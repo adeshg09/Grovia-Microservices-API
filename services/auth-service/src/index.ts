@@ -7,6 +7,7 @@ import { envConfig } from "./config/env.config";
 import { connectToDatabase } from "./config/db.config";
 import { connectRabbitMQ } from "./utils/rabbitmq";
 import { seedSuperadmin } from "./scripts";
+import { initModels } from "./utils/initModels";
 
 // Initialize Express app
 const app = express();
@@ -52,6 +53,7 @@ const PORT = envConfig.AUTH_SERVICE_PORT || 8001;
 const startServer = async () => {
   try {
     await connectToDatabase();
+    await initModels();
     await connectRabbitMQ();
     await seedSuperadmin();
     app.listen(PORT, () => {

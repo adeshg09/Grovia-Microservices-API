@@ -12,6 +12,7 @@ import { envConfig } from "./config/env.config";
 import { connectToDatabase } from "./config/db.config";
 import { connectRabbitMQ } from "./utils/rabbitmq";
 import { defaultOutletAdminCreatedConsumer } from "./consumers/defaultOutletAdmin.consumer";
+import { initModels } from "./utils/initModels";
 
 // Initialize Express app
 const app = express();
@@ -63,6 +64,7 @@ const PORT = envConfig.INVENTORY_SERVICE_PORT || 8005;
 const startServer = async () => {
   try {
     await connectToDatabase();
+    await initModels();
     await connectRabbitMQ();
     await defaultOutletAdminCreatedConsumer();
     app.listen(PORT, () => {
