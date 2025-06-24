@@ -111,12 +111,13 @@ export const getAllOutletDetails = async (req: Request, res: Response) => {
       { outlets }
     );
   } catch (error: any) {
+    console.log("Error in getAllOutletDetails:", error);
     return errorResponse(
       res,
       STATUS_CODES.BAD_REQUEST,
       RESPONSE_MESSAGES.BAD_REQUEST,
       error.message,
-      error
+      {}
     );
   }
 };

@@ -37,7 +37,11 @@ router.post(
 router.get(
   "/get-outlet-admin-profile-by-id/:adminId",
   authenticate,
-  authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.OUTLET_ADMIN]),
+  authorize([
+    USER_ROLES.SUPER_ADMIN,
+    USER_ROLES.OUTLET_ADMIN,
+    USER_ROLES.CAPTAIN,
+  ]),
   getOutletAdminProfileById
 );
 
