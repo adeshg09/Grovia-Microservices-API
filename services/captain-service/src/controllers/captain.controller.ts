@@ -17,6 +17,7 @@ import {
   upsertCaptainProfileService,
   upsertOutletService,
   upsertVehicleTypeService,
+  upsertWorkCityService,
 } from "../services/captain.service";
 
 export const createCaptainProfile = async (req: Request, res: Response) => {
@@ -135,6 +136,31 @@ export const upsertVehicleType = async (req: Request, res: Response) => {
       null,
       {
         vehicleType: updatedVehicleType,
+      }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+export const upsertWorkCity = async (req: Request, res: Response) => {
+  try {
+    const { updatedWorkCity } = await upsertWorkCityService(
+      req.body?.workCity,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      null,
+      {
+        workCity: updatedWorkCity,
       }
     );
   } catch (error: any) {

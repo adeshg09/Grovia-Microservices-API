@@ -12,6 +12,7 @@ import {
   upsertCaptainProfile,
   upsertOutlet,
   upsertVehicleType,
+  upsertWorkCity,
 } from "../controllers/captain.controller";
 import { authenticate, authorize } from "../middlewares/auth.middleware";
 import { USER_ROLES } from "../constants";
@@ -107,6 +108,13 @@ router.post(
   authenticate,
   authorize([USER_ROLES.CAPTAIN]),
   upsertOutlet
+);
+
+router.post(
+  "/select-work-city",
+  authenticate,
+  authorize([USER_ROLES.CAPTAIN]),
+  upsertWorkCity
 );
 
 router.post(

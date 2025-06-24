@@ -169,6 +169,24 @@ export const upsertVehicleTypeService = async (
   };
 };
 
+export const upsertWorkCityService = async (
+  workCity: string,
+  userId: string
+) => {
+  const captain = await Captain.findOne({ userId });
+
+  if (!captain) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
+  }
+
+  captain.workCity = workCity ?? captain.workCity;
+  await captain.save();
+
+  return {
+    updatedWorkCity: captain.workCity,
+  };
+};
+
 export const selectOutletService = async (outletId: string, userId: string) => {
   const captain = await Captain.findOne({ userId });
 

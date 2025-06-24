@@ -10,6 +10,7 @@ export interface ICaptain extends Document {
   gender?: GENDERS;
   profileImage?: string;
   vehicleType?: VehicleType;
+  workCity?: string;
   outletId?: Schema.Types.ObjectId;
   outletAssignedAt?: Date;
   selfieUrl?: string;
@@ -56,6 +57,7 @@ const CaptainSchema = new Schema<ICaptain>(
     },
     profileImage: { type: String },
     vehicleType: { type: String },
+    workCity: { type: String },
     outletId: {
       type: Schema.Types.ObjectId,
       ref: "Outlet",
