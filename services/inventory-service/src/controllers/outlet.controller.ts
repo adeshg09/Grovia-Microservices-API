@@ -86,6 +86,7 @@ export const getOutletDetailsByAdminId = async (
 
 export const getAllOutletDetails = async (req: Request, res: Response) => {
   try {
+    console.log("req.query", req.query);
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
