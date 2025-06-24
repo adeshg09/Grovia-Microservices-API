@@ -98,7 +98,10 @@ export const getAllOutletDetails = async (req: Request, res: Response) => {
       );
     }
 
-    const { outlets } = await getAllOutletDetailsService(token);
+    const { outlets } = await getAllOutletDetailsService(
+      token,
+      req.query?.city as string
+    );
 
     return successResponse(
       res,

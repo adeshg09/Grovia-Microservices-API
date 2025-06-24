@@ -96,8 +96,14 @@ export const getOutletDetailsByAdminIdService = async (adminId: string) => {
   return outletData ? outletData : null;
 };
 
-export const getAllOutletDetailsService = async (token: string) => {
-  const outletsData = await Outlet.find();
+export const getAllOutletDetailsService = async (
+  token: string,
+  city?: string
+) => {
+  const query: any = {};
+  if (city) query.city = city;
+
+  const outletsData = await Outlet.find(query);
 
   const outlets = await Promise.all(
     outletsData.map(async (outlet) => {

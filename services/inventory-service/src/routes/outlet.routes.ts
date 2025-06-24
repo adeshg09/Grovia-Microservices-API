@@ -50,7 +50,7 @@ router.get(
 router.get(
   "/get-all-outlet-details",
   authenticate,
-  authorize([USER_ROLES.SUPER_ADMIN]),
+  authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.CAPTAIN]),
   getAllOutletDetails
 );
 
