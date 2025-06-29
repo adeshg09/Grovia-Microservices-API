@@ -49,6 +49,8 @@ export const RESPONSE_SUCCESS_MESSAGES = {
   OTP_RESENT: "OTP resent successfully",
   USER_DETAILS_FETCHED: "User details fetched successfully",
   USER_CREATED: "User created successfully",
+  USER_STATUS_UPDATED: "User status updated successfully",
+  USER_ACTIVATION_UPDATED: "User activation updated successfully",
 };
 
 export const RESPONSE_ERROR_MESSAGES = {
@@ -59,4 +61,5 @@ export const RESPONSE_ERROR_MESSAGES = {
   INVALID_COUNTRYCODE_FORMAT: "Country code must start with + (e.g. +91)",
   ROLE_REQUIRED: "Role is required for new user registration",
   INVALID_ROLE: "Invalid role provided",
+  USER_NOT_FOUND: "User not found",
 };

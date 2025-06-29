@@ -7,13 +7,11 @@ import {
   STATUS_CODES,
 } from "../constants";
 import {
-  addBankDetailsService,
   createCaptainProfileService,
   getCaptainProfile,
   selectOutletService,
   selectVehicleTypeService,
-  uploadLiveSelfieService,
-  upsertBankDetailsService,
+  submitOnboardingService,
   upsertCaptainProfileService,
   upsertOutletService,
   upsertVehicleTypeService,
@@ -224,67 +222,15 @@ export const upsertOutlet = async (req: Request, res: Response) => {
   }
 };
 
-export const uploadLiveSelfie = async (req: Request, res: Response) => {
+export const submitOnboarding = async (req: Request, res: Response) => {
   try {
-    const { updatedCaptain } = await uploadLiveSelfieService(
-      req.file?.path as string,
-      req.user?.id
-    );
+    const result = await submitOnboardingService(req.user?.id);
     return successResponse(
       res,
       STATUS_CODES.OK,
       RESPONSE_MESSAGES.SUCCESS,
-      RESPONSE_SUCCESS_MESSAGES.SELFIE_UPLOADED,
-      { captain: updatedCaptain }
-    );
-  } catch (error: any) {
-    return errorResponse(
-      res,
-      STATUS_CODES.BAD_REQUEST,
-      RESPONSE_MESSAGES.BAD_REQUEST,
-      error.message,
-      error
-    );
-  }
-};
-
-export const addBankDetails = async (req: Request, res: Response) => {
-  try {
-    const { updatedCaptain } = await addBankDetailsService(
-      req.body,
-      req.user?.id
-    );
-
-    return successResponse(
-      res,
-      STATUS_CODES.OK,
-      RESPONSE_MESSAGES.SUCCESS,
-      RESPONSE_SUCCESS_MESSAGES.BANK_DETAILS_ADDED,
-      { captain: updatedCaptain }
-    );
-  } catch (error: any) {
-    return errorResponse(
-      res,
-      STATUS_CODES.BAD_REQUEST,
-      RESPONSE_MESSAGES.BAD_REQUEST,
-      error.message,
-      error
-    );
-  }
-};
-
-export const upsertBankDetails = async (req: Request, res: Response) => {
-  try {
-    const { updatedBankDetails } = await upsertBankDetailsService(
-      req.body,
-      req.user?.id
-    );
-    return successResponse(
-      res,
-      STATUS_CODES.OK,
-      RESPONSE_MESSAGES.SUCCESS,
-      null,
-      { bankDetails: updatedBankDetails }
+      RESPONSE_SUCCESS_MESSAGES.ONBOARDING_SUBMITTED,
+      result
     );
   } catch (error: any) {
     return errorResponse(

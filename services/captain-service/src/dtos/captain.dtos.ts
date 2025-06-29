@@ -19,13 +19,3 @@ export interface createCaptainProfileDto {
   dob?: Date;
   gender?: string;
 }
-
-export interface addBankDetailsDto {
-  bankDetails: {
-    accountHolderName: string;
-    bankName: string;
-    accountNumber: string;
-    ifscCode: string;
-    upiId?: string;
-  };
-}

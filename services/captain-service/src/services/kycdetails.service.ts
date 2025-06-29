@@ -1,5 +1,8 @@
 import { RESPONSE_ERROR_MESSAGES, USER_ROLES } from "../constants";
-import { VerifyManualPlanDto } from "../dtos/kycdetails.dtos";
+import {
+  addBankDetailsDto,
+  VerifyManualPlanDto,
+} from "../dtos/kycdetails.dtos";
 import { KycDetails } from "../models/kycdetails.model";
 import { Captain } from "../models/captain.model";
 import axios from "axios";
@@ -183,36 +186,62 @@ export const verifyManualPanService = async (
   };
 };
 
-export const submitKycDetailsService = async (userId: string) => {
-  const captainDetails = await Captain.findOne({ userId });
-  if (!captainDetails)
-    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
+export const addBankDetailsService = async (
+  addBankDetailsData: addBankDetailsDto,
+  userId: string
+) => {
+  const { bankDetails } = addBankDetailsData;
 
-  const kycDetails = await KycDetails.findOne({
-    captainId: captainDetails._id,
-  });
-  if (!kycDetails)
+  const kycDetails = await KycDetails.findOne({ userId: userId });
+
+  if (!kycDetails) {
     throw new Error(RESPONSE_ERROR_MESSAGES.KYC_DETAILS_NOT_FOUND);
-
-  const { panVerified, licenseVerified, addressVerified } = kycDetails;
-
-  const aadhaarCheck = kycDetails.aadhaarVerified ?? true;
-
-  if (!panVerified || !licenseVerified || !addressVerified || !aadhaarCheck) {
-    throw new Error(RESPONSE_ERROR_MESSAGES.KYC_DETAILS_NOT_SUBMITTED);
   }
 
-  kycDetails.submittedAt = new Date();
+  kycDetails.bankDetails = bankDetails;
   await kycDetails.save();
 
-  // Update captain status to mark it as under verification
-  captainDetails.isKYCComplete = true;
-  captainDetails.isDocumentsVerified = false; // waiting for manual verification
-  captainDetails.isApprovedByOutletAdmin = false; // admin hasn't approved yet
-  await captainDetails.save();
+  return {
+    bankDetails: kycDetails.bankDetails,
+  };
+};
+
+export const upsertBankDetailsService = async (
+  data: addBankDetailsDto,
+  userId: string
+) => {
+  const kycDetails = await KycDetails.findOne({ userId: userId });
+
+  if (!kycDetails) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.KYC_DETAILS_NOT_FOUND);
+  }
+
+  kycDetails.bankDetails = {
+    ...kycDetails.bankDetails,
+    ...data.bankDetails,
+  };
+  await kycDetails.save();
 
   return {
-    captainId: captainDetails._id,
-    kycSubmittedAt: kycDetails.submittedAt,
+    updatedBankDetails: kycDetails.bankDetails,
+  };
+};
+
+export const uploadLiveSelfieService = async (
+  selfieUrl: string,
+  userId: string
+) => {
+  if (!selfieUrl) throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
+
+  const kycDetails = await KycDetails.findOne({ userId: userId });
+
+  if (!kycDetails) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.KYC_DETAILS_NOT_FOUND);
+  }
+  kycDetails.selfieUrl = selfieUrl;
+  await kycDetails.save();
+
+  return {
+    selfieUrl: kycDetails.selfieUrl,
   };
 };

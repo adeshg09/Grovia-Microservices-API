@@ -6,11 +6,11 @@ export interface IKycDetails extends Document {
   aadhaarUrl?: string;
   aadhaarVerified?: boolean;
 
-  panUrl: string;
-  panVerified: boolean;
+  panUrl?: string;
+  panVerified?: boolean;
 
-  drivingLicenseUrl: string;
-  licenseVerified: boolean;
+  drivingLicenseUrl?: string;
+  licenseVerified?: boolean;
 
   addressProofUrl?: string;
   manualAddress?: {
@@ -23,9 +23,23 @@ export interface IKycDetails extends Document {
   };
   addressVerified?: boolean;
 
+  selfieUrl?: string;
+  selfieVerified?: boolean;
+
+  bankDetails?: {
+    accountHolderName: string;
+    bankName: string;
+    accountNumber: string;
+    ifscCode: string;
+    upiId?: string;
+  };
+  bankDetailsVerified?: boolean;
+
   verifiedBy?: Schema.Types.ObjectId;
+
   verificationRemarks?: string;
   rejectedFields?: string[];
+
   submittedAt?: Date;
 }
 
@@ -41,10 +55,10 @@ const KycDetailsSchema = new Schema<IKycDetails>(
     aadhaarUrl: { type: String },
     aadhaarVerified: { type: Boolean, default: false },
 
-    panUrl: { type: String, required: true },
+    panUrl: { type: String },
     panVerified: { type: Boolean, default: false },
 
-    drivingLicenseUrl: { type: String, required: true },
+    drivingLicenseUrl: { type: String },
     licenseVerified: { type: Boolean, default: false },
 
     addressProofUrl: { type: String },
@@ -58,10 +72,22 @@ const KycDetailsSchema = new Schema<IKycDetails>(
     },
     addressVerified: { type: Boolean, default: false },
 
+    selfieUrl: { type: String },
+    selfieVerified: { type: Boolean, default: false },
+
+    bankDetails: {
+      accountHolderName: { type: String },
+      bankName: { type: String },
+      accountNumber: { type: String },
+      ifscCode: { type: String },
+      upiId: { type: String },
+    },
+    bankDetailsVerified: { type: Boolean, default: false },
+
     verifiedBy: { type: Schema.Types.ObjectId, ref: "Admin" },
     verificationRemarks: { type: String },
     rejectedFields: [{ type: String }],
-    submittedAt: { type: Date, default: Date.now },
+    submittedAt: { type: Date },
   },
   { timestamps: true }
 );

@@ -6,8 +6,10 @@ import {
   STATUS_CODES,
 } from "../constants";
 import {
+  addBankDetailsService,
   initiateAadhaarService,
-  submitKycDetailsService,
+  uploadLiveSelfieService,
+  upsertBankDetailsService,
   verifyAadhaarService,
   verifyManualPanService,
 } from "../services/kycdetails.service";
@@ -117,29 +119,72 @@ export const verifyManualPan = async (req: Request, res: Response) => {
   }
 };
 
-export const submitKycDetails = async (req: Request, res: Response) => {
+export const uploadLiveSelfie = async (req: Request, res: Response) => {
   try {
-    const { captainId, kycSubmittedAt } = await submitKycDetailsService(
+    const { selfieUrl } = await uploadLiveSelfieService(
+      req.file?.path as string,
       req.user?.id
     );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.SELFIE_UPLOADED,
+      { selfieUrl }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
+export const addBankDetails = async (req: Request, res: Response) => {
+  try {
+    const { bankDetails } = await addBankDetailsService(req.body, req.user?.id);
 
     return successResponse(
       res,
       STATUS_CODES.OK,
       RESPONSE_MESSAGES.SUCCESS,
-      RESPONSE_SUCCESS_MESSAGES.KYC_DETAILS_SUBMITTED,
-      {
-        captainId,
-        kycSubmittedAt,
-      }
+      RESPONSE_SUCCESS_MESSAGES.BANK_DETAILS_ADDED,
+      { bankDetails }
     );
-  } catch (err: any) {
+  } catch (error: any) {
     return errorResponse(
       res,
       STATUS_CODES.BAD_REQUEST,
       RESPONSE_MESSAGES.BAD_REQUEST,
-      err.message,
-      {}
+      error.message,
+      error
+    );
+  }
+};
+
+export const upsertBankDetails = async (req: Request, res: Response) => {
+  try {
+    const { updatedBankDetails } = await upsertBankDetailsService(
+      req.body,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      null,
+      { bankDetails: updatedBankDetails }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
     );
   }
 };

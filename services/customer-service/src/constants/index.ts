@@ -11,6 +11,12 @@ export enum USER_ROLES {
   OUTLET_ADMIN = "outlet-admin",
 }
 
+export enum GENDERS {
+  MALE = "male",
+  FEMALE = "female",
+  OTHER = "other",
+}
+
 export const STATUS_CODES = {
   OK: 200,
   CREATED: 201,

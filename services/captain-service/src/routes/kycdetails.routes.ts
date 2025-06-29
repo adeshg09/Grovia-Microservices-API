@@ -5,6 +5,8 @@ import { authenticate, authorize } from "../middlewares/auth.middleware";
 import { USER_ROLES } from "../constants";
 import {
   initiateAadhaar,
+  uploadLiveSelfie,
+  upsertBankDetails,
   verifyAadhaar,
   verifyManualPan,
 } from "../controllers/kycdetails.controller";
@@ -83,23 +85,25 @@ router.post(
 //   getAddressProofStatus
 // );
 
-// router.get(
-//   "/submit-kyc-details",
+router.post(
+  "/upload-live-selfie",
+  authenticate,
+  authorize([USER_ROLES.CAPTAIN]),
+  getUploadMiddleware("captains/selfies", "selfieUrl"),
+  uploadLiveSelfie
+);
+
+// router.post(
+//   "/add-bank-details",
 //   authenticate,
 //   authorize([USER_ROLES.CAPTAIN]),
-//   submitKycDetails
-// );
-// router.get(
-//   "/get-kyc-details",
-//   authenticate,
-//   authorize([USER_ROLES.CAPTAIN]),
-//   getKycDetails
-// );
-// router.get(
-//   "/get-kyc-status",
-//   authenticate,
-//   authorize([USER_ROLES.CAPTAIN]),
-//   getKycStatus
+//   addBankDetails
 // );
 
+router.post(
+  "/add-bank-details",
+  authenticate,
+  authorize([USER_ROLES.CAPTAIN]),
+  upsertBankDetails
+);
 export default router;

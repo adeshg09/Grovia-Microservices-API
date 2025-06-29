@@ -2,12 +2,12 @@ import axios from "axios";
 import { RESPONSE_ERROR_MESSAGES, USER_ROLES } from "../constants";
 import { createCustomerProfileDto } from "../dtos/customer.dtos";
 import { Customer } from "../models/customer.model";
-import { envConfig } from "../config/env.config";
 import { authClient } from "../config/axios.config";
 
 export const createCustomerProfileService = async (
   createCustomerProfileData: createCustomerProfileDto,
-  userId: string
+  userId: string,
+  token: string
 ) => {
   const { firstName, lastName, email, profileImage, dob, gender } =
     createCustomerProfileData;
@@ -35,9 +35,18 @@ export const createCustomerProfileService = async (
 
   await newCustomer.save();
 
+  const activationResponse = await authClient.patch(
+    `/users/update-activation/${userId}`,
+    {},
+    token
+  );
+  // console.log("Activation Response:", activationResponse.data);
+
+  const { data: userData } = activationResponse.data;
+
   return {
     customer: {
-      userId: newCustomer.userId,
+      ...userData,
       firstName: newCustomer.firstName,
       lastName: newCustomer.lastName,
       email: newCustomer.email,

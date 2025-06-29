@@ -2,13 +2,11 @@
 
 import { Router } from "express";
 import {
-  addBankDetails,
   createCaptainProfile,
   getProfile,
   selectOutlet,
   selectVehicleType,
-  uploadLiveSelfie,
-  upsertBankDetails,
+  submitOnboarding,
   upsertCaptainProfile,
   upsertOutlet,
   upsertVehicleType,
@@ -117,30 +115,15 @@ router.post(
   upsertWorkCity
 );
 
-router.post(
-  "/upload-live-selfie",
-  authenticate,
-  authorize([USER_ROLES.CAPTAIN]),
-  getUploadMiddleware("captains/selfies", "selfieUrl"),
-  uploadLiveSelfie
-);
-
-// router.post(
-//   "/add-bank-details",
-//   authenticate,
-//   authorize([USER_ROLES.CAPTAIN]),
-//   addBankDetails
-// );
-
-router.post(
-  "/add-bank-details",
-  authenticate,
-  authorize([USER_ROLES.CAPTAIN]),
-  upsertBankDetails
-);
-
 //  router.patch("/update-profile-picture",authenticate,
 //  authorize([USER_ROLES.CAPTAIN]), uploadProfilePicture);
+
+router.patch(
+  "/submit-onboarding",
+  authenticate,
+  authorize([USER_ROLES.CAPTAIN]),
+  submitOnboarding
+);
 
 // router.patch(
 //   "/approve-captain/:captainId",

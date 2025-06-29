@@ -3,9 +3,12 @@ import { PRODUCT_UNITS } from "../constants";
 
 export interface IProduct extends Document {
   name: string;
+  slug: string;
   description: string;
   categoryId: Schema.Types.ObjectId;
-  image: string;
+  subCategoryId?: Schema.Types.ObjectId;
+  images: string[];
+  thumbnail: string;
   brand?: string;
   quantity: number;
   unit: PRODUCT_UNITS;
@@ -15,13 +18,19 @@ export interface IProduct extends Document {
 const ProductSchema = new Schema<IProduct>(
   {
     name: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
     description: { type: String },
     categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
-    image: { type: String, required: true },
+    subCategoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    images: [{ type: String, required: true }],
+    thumbnail: { type: String, required: true },
     brand: { type: String },
     quantity: { type: Number, default: 0 },
     unit: { type: String, required: true },

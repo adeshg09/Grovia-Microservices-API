@@ -1,4 +1,5 @@
 import { Schema, model, Document } from "mongoose";
+import { GENDERS } from "../constants";
 
 export interface ICustomer extends Document {
   userId: Schema.Types.ObjectId;
@@ -7,7 +8,7 @@ export interface ICustomer extends Document {
   email: string;
   profileImage?: string;
   dob?: Date;
-  gender?: string;
+  gender?: GENDERS;
   addresses: Schema.Types.ObjectId[];
 }
 
@@ -38,7 +39,7 @@ const CustomerSchema = new Schema<ICustomer>(
     },
     gender: {
       type: String,
-      enum: ["male", "female", "other"],
+      enum: Object.values(GENDERS),
     },
     addresses: [
       {

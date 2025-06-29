@@ -51,6 +51,8 @@ export const RESPONSE_SUCCESS_MESSAGES = {
 
   KYC_DETAILS_SUBMITTED:
     "KYC details submitted successfully and is under review",
+
+  ONBOARDING_SUBMITTED: " Onboarding details submitted successfully",
 };
 
 export const RESPONSE_ERROR_MESSAGES = {

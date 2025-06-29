@@ -1,9 +1,6 @@
 import * as mongoose from "mongoose";
 import { RESPONSE_ERROR_MESSAGES, VehicleType } from "../constants";
-import {
-  addBankDetailsDto,
-  createCaptainProfileDto,
-} from "../dtos/captain.dtos";
+import { createCaptainProfileDto } from "../dtos/captain.dtos";
 import { Captain } from "../models/captain.model";
 import { authClient } from "../config/axios.config";
 
@@ -34,7 +31,6 @@ export const createCaptainProfileService = async (
     dob,
     gender,
     isKYCComplete: false,
-    isDocumentsVerified: false,
     isApprovedByOutletAdmin: false,
     isActive: false,
   });
@@ -87,7 +83,6 @@ export const upsertCaptainProfileService = async (
       dob,
       gender,
       isKYCComplete: false,
-      isDocumentsVerified: false,
       isApprovedByOutletAdmin: false,
       isActive: false,
     });
@@ -125,11 +120,8 @@ export const getCaptainProfile = async (userId: string, token: string) => {
     gender: captainUserData?.gender,
     profileImage: captainUserData?.profileImage,
     outletId: captainData?.outletId,
-    bankDetails: captainData?.bankDetails,
     isKYCComplete: captainData?.isKYCComplete,
-    isDocumentsVerified: captainData?.isDocumentsVerified,
     isApprovedByOutletAdmin: captainData?.isApprovedByOutletAdmin,
-    isActive: captainData?.isActive,
   };
 
   return captainProfile;
@@ -216,81 +208,19 @@ export const upsertOutletService = async (outletId: string, userId: string) => {
   };
 };
 
-export const addBankDetailsService = async (
-  addBankDetailsData: addBankDetailsDto,
-  userId: string
-) => {
-  const { bankDetails } = addBankDetailsData;
-
-  const captain = await Captain.findOne({ userId: userId });
-
-  if (!captain) {
-    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
-  }
-
-  captain.bankDetails = bankDetails;
-  await captain.save();
-
-  return {
-    updatedCaptain: {
-      userId: captain.userId,
-      firstName: captain.firstName,
-      lastName: captain.lastName,
-      email: captain.email,
-      profileImage: captain.profileImage,
-      dob: captain.dob,
-      gender: captain.gender,
-      bankDetails: captain.bankDetails,
-    },
-  };
-};
-
-export const upsertBankDetailsService = async (
-  data: addBankDetailsDto,
-  userId: string
-) => {
+export const submitOnboardingService = async (userId: string) => {
   const captain = await Captain.findOne({ userId });
 
-  if (!captain) {
-    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
-  }
+  if (!captain)
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_PROFILE_NOT_FOUND);
 
-  captain.bankDetails = {
-    ...captain.bankDetails,
-    ...data.bankDetails,
-  };
+  captain.isKYCComplete = true;
+  captain.isApprovedByOutletAdmin = false;
+
   await captain.save();
 
   return {
-    updatedBankDetails: captain.bankDetails,
-  };
-};
-
-export const uploadLiveSelfieService = async (
-  selfieUrl: string,
-  userId: string
-) => {
-  if (!selfieUrl) throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
-
-  const captain = await Captain.findOne({ userId: userId });
-
-  if (!captain) {
-    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
-  }
-
-  captain.selfieUrl = selfieUrl;
-  await captain.save();
-
-  return {
-    updatedCaptain: {
-      userId: captain.userId,
-      firstName: captain.firstName,
-      lastName: captain.lastName,
-      email: captain.email,
-      profileImage: captain.profileImage,
-      dob: captain.dob,
-      gender: captain.gender,
-      selfieUrl: captain.selfieUrl,
-    },
+    message:
+      "Your profile is now under review. You'll be notified once it’s approved by the outlet admin.",
   };
 };

@@ -13,18 +13,8 @@ export interface ICaptain extends Document {
   workCity?: string;
   outletId?: Schema.Types.ObjectId;
   outletAssignedAt?: Date;
-  selfieUrl?: string;
-  bankDetails?: {
-    accountHolderName: string;
-    bankName: string;
-    accountNumber: string;
-    ifscCode: string;
-    upiId?: string;
-  };
   isKYCComplete: boolean;
-  isDocumentsVerified: boolean;
   isApprovedByOutletAdmin: boolean;
-  isActive: boolean;
 }
 
 const CaptainSchema = new Schema<ICaptain>(
@@ -64,18 +54,8 @@ const CaptainSchema = new Schema<ICaptain>(
       default: null,
     },
     outletAssignedAt: { type: Date },
-    selfieUrl: { type: String },
-    bankDetails: {
-      accountHolderName: { type: String },
-      bankName: { type: String },
-      accountNumber: { type: String },
-      ifscCode: { type: String },
-      upiId: { type: String },
-    },
     isKYCComplete: { type: Boolean, default: false },
-    isDocumentsVerified: { type: Boolean, default: false },
     isApprovedByOutletAdmin: { type: Boolean, default: false },
-    isActive: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
