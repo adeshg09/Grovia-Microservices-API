@@ -19,15 +19,23 @@ export const initiateSendOtp = async (otpData: OtpDTO) => {
 
 // Initiate Verify Otp
 export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
-  const { phoneNumber, countryCode, otp, role } = verifyOtpData;
+  const { phoneNumber, countryCode, otp, role, isTruecaller } = verifyOtpData;
 
-  if (!phoneNumber || !countryCode || !otp || !role) {
+  if (!phoneNumber || !countryCode || !role) {
     throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
   }
 
-  const verification = await verifyOtpViaTwilio(phoneNumber, otp, countryCode);
-  if (verification.status !== "approved") {
-    throw new Error(RESPONSE_ERROR_MESSAGES.TOKEN_INVALID);
+  if (!isTruecaller) {
+    if (!otp) throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
+
+    const verification = await verifyOtpViaTwilio(
+      phoneNumber,
+      otp,
+      countryCode
+    );
+    if (verification.status !== "approved") {
+      throw new Error(RESPONSE_ERROR_MESSAGES.TOKEN_INVALID);
+    }
   }
 
   const formattedPhone = formatPhoneNumber(phoneNumber, countryCode);
