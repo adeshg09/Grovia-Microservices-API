@@ -226,9 +226,9 @@ export const submitOnboardingService = async (userId: string) => {
     throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_ONBOARDING_STEP2_PENDING);
   }
 
-  if (!kycDetails?.bankDetails) {
-    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_ONBOARDING_STEP3_PENDING);
-  }
+  // if (!kycDetails?.bankDetails) {
+  //   throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_ONBOARDING_STEP3_PENDING);
+  // }
 
   captain.isKYCComplete = true;
   captain.isApprovedByOutletAdmin = false;
