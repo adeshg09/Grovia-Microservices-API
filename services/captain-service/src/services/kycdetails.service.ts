@@ -210,20 +210,41 @@ export const upsertBankDetailsService = async (
   data: addBankDetailsDto,
   userId: string
 ) => {
-  const kycDetails = await KycDetails.findOne({ userId: userId });
+  //when aadhar, pan, dl verification api will be integrated that time use this coz till that kyc details is empty so cant add bank details
+  // const kycDetails = await KycDetails.findOne({ userId: userId });
 
-  if (!kycDetails) {
-    throw new Error(RESPONSE_ERROR_MESSAGES.KYC_DETAILS_NOT_FOUND);
-  }
+  // if (!kycDetails) {
+  //   throw new Error(RESPONSE_ERROR_MESSAGES.KYC_DETAILS_NOT_FOUND);
+  // }
 
-  kycDetails.bankDetails = {
-    ...kycDetails.bankDetails,
-    ...data.bankDetails,
-  };
-  await kycDetails.save();
+  // kycDetails.bankDetails = {
+  //   ...kycDetails.bankDetails,
+  //   ...data.bankDetails,
+  // };
+  // await kycDetails.save();
+
+  // return {
+  //   updatedBankDetails: kycDetails.bankDetails,
+  // };
+
+  const updatedKycDetails = await KycDetails.findOneAndUpdate(
+    { userId: userId },
+    {
+      $set: {
+        bankDetails: {
+          ...(data.bankDetails || {}),
+        },
+      },
+    },
+    {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true,
+    }
+  );
 
   return {
-    updatedBankDetails: kycDetails.bankDetails,
+    updatedBankDetails: updatedKycDetails?.bankDetails,
   };
 };
 
