@@ -26,7 +26,7 @@ router.post(
 router.get(
   "/get-user-by-id/:userId",
   authenticate,
-  authorize([USER_ROLES.SUPER_ADMIN]),
+  authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.OUTLET_ADMIN]),
   getUserById
 );
 

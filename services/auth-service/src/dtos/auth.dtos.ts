@@ -21,6 +21,6 @@ export interface verifyOtpDto {
   phoneNumber: string;
   countryCode: string;
   otp?: string;
-  role: string;
+  role: USER_ROLES;
   isTruecaller?: boolean;
 }

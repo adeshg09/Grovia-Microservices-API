@@ -95,5 +95,6 @@ export const authorize = (allowedRoles: string[]) => {
         {}
       );
     }
+    next();
   };
 };

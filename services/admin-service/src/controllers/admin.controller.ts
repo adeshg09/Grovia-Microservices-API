@@ -149,7 +149,7 @@ export const getProfile = async (req: Request, res: Response) => {
       STATUS_CODES.BAD_REQUEST,
       RESPONSE_MESSAGES.BAD_REQUEST,
       error.message,
-      error
+      {}
     );
   }
 };

@@ -3,7 +3,10 @@ import { createUserDto } from "../dtos/user.dtos";
 import { User } from "../models/auth.user.model";
 
 export const getUserByIdService = async (userId: string) => {
-  const user = await User.findById(userId);
+  console.log("userId", userId);
+  const user = await User.findById({
+    _id: userId,
+  });
 
   const userData = {
     userId: user?._id,

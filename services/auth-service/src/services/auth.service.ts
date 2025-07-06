@@ -20,6 +20,7 @@ export const initiateSendOtp = async (otpData: OtpDTO) => {
 // Initiate Verify Otp
 export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
   const { phoneNumber, countryCode, otp, role, isTruecaller } = verifyOtpData;
+  console.log("verifyOtpData", verifyOtpData);
 
   if (!phoneNumber || !countryCode || !role) {
     throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
