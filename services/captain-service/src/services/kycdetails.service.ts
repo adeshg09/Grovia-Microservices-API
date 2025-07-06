@@ -7,6 +7,7 @@ import { KycDetails } from "../models/kycdetails.model";
 import { Captain } from "../models/captain.model";
 import axios from "axios";
 import { envConfig } from "../config/env.config";
+import { getLoggedInCaptainId } from "../utils/getLoggedInCaptainId";
 
 export const initiateAadhaarService = async (
   aadhaarNumber: string,
@@ -227,8 +228,9 @@ export const upsertBankDetailsService = async (
   //   updatedBankDetails: kycDetails.bankDetails,
   // };
 
+  const captainId = await getLoggedInCaptainId(userId);
   const updatedKycDetails = await KycDetails.findOneAndUpdate(
-    { userId: userId },
+    { captainId: captainId },
     {
       $set: {
         bankDetails: {

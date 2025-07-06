@@ -243,9 +243,11 @@ export const submitOnboardingService = async (userId: string) => {
 
 export const approveCaptainService = async (
   captainId: string,
-  outletAdminUserId: string
+  outletAdminUserId: string,
+  token: string
 ) => {
   const captain = await Captain.findById(captainId);
+  const captainUserId = captain?.userId;
 
   if (!captain) {
     throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
@@ -254,6 +256,14 @@ export const approveCaptainService = async (
   captain.isApprovedByOutletAdmin = true;
 
   await captain.save();
+
+  const activationResponse = await authClient.patch(
+    `/users/update-activation/${captainUserId}`,
+    {},
+    token
+  );
+
+  const { data: userData } = activationResponse.data;
 
   await sendEmail({
     to: captain.email,

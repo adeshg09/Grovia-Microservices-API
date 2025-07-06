@@ -245,9 +245,21 @@ export const submitOnboarding = async (req: Request, res: Response) => {
 
 export const approveCaptain = async (req: Request, res: Response) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return errorResponse(
+        res,
+        STATUS_CODES.UNAUTHORIZED,
+        RESPONSE_MESSAGES.UNAUTHORIZED,
+        RESPONSE_ERROR_MESSAGES.ACCESS_TOKEN_REQUIRED,
+        {}
+      );
+    }
     const result = await approveCaptainService(
       req.params?.captainId,
-      req.user?.id
+      req.user?.id,
+      token
     );
     return successResponse(
       res,

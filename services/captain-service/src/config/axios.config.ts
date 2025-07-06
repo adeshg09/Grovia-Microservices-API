@@ -44,6 +44,15 @@ const createClientWithToken = (baseURL: string) => {
           Authorization: `Bearer ${token}`,
         },
       }),
+
+    patch: (url: string, data: any, token: string, config: any = {}) =>
+      instance.patch(url, data, {
+        ...config,
+        headers: {
+          ...(config.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      }),
   };
 };
 
