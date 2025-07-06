@@ -2,10 +2,9 @@
 
 import { Router } from "express";
 import {
+  approveCaptain,
   createCaptainProfile,
   getProfile,
-  selectOutlet,
-  selectVehicleType,
   submitOnboarding,
   upsertCaptainProfile,
   upsertOutlet,
@@ -14,7 +13,6 @@ import {
 } from "../controllers/captain.controller";
 import { authenticate, authorize } from "../middlewares/auth.middleware";
 import { USER_ROLES } from "../constants";
-import { getUploadMiddleware } from "../middlewares/upload.middlware";
 
 const router = Router();
 
@@ -24,7 +22,6 @@ router.post(
   authorize([USER_ROLES.CAPTAIN]),
   createCaptainProfile
 );
-
 router.post(
   "/upsert-captain-profile",
   authenticate,
@@ -81,25 +78,12 @@ router.get(
 //   updateProfile
 // );
 
-// router.post(
-//   "/select-vehicle-type",
-//   authenticate,
-//   authorize([USER_ROLES.CAPTAIN]),
-//   selectVehicleType
-// );
 router.post(
   "/select-vehicle-type",
   authenticate,
   authorize([USER_ROLES.CAPTAIN]),
   upsertVehicleType
 );
-
-// router.post(
-//   "/select-outlet",
-//   authenticate,
-//   authorize([USER_ROLES.CAPTAIN]),
-//   selectOutlet
-// );
 
 router.post(
   "/select-outlet",
@@ -125,11 +109,11 @@ router.patch(
   submitOnboarding
 );
 
-// router.patch(
-//   "/approve-captain/:captainId",
-//   authenticate,
-//   authorize([USER_ROLES.OUTLET_ADMIN]),
-//   approveCaptain
-// );
+router.patch(
+  "/approve-captain/:captainId",
+  authenticate,
+  authorize([USER_ROLES.OUTLET_ADMIN]),
+  approveCaptain
+);
 
 export default router;

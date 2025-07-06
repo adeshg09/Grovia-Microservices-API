@@ -7,6 +7,7 @@ import {
   STATUS_CODES,
 } from "../constants";
 import {
+  approveCaptainService,
   createCaptainProfileService,
   getCaptainProfile,
   selectOutletService,
@@ -120,7 +121,6 @@ export const selectVehicleType = async (req: Request, res: Response) => {
     );
   }
 };
-
 export const upsertVehicleType = async (req: Request, res: Response) => {
   try {
     const { updatedVehicleType } = await upsertVehicleTypeService(
@@ -146,6 +146,7 @@ export const upsertVehicleType = async (req: Request, res: Response) => {
     );
   }
 };
+
 export const upsertWorkCity = async (req: Request, res: Response) => {
   try {
     const { updatedWorkCity } = await upsertWorkCityService(
@@ -195,7 +196,6 @@ export const selectOutlet = async (req: Request, res: Response) => {
     );
   }
 };
-
 export const upsertOutlet = async (req: Request, res: Response) => {
   try {
     const { updatedOutletId } = await upsertOutletService(
@@ -230,6 +230,30 @@ export const submitOnboarding = async (req: Request, res: Response) => {
       STATUS_CODES.OK,
       RESPONSE_MESSAGES.SUCCESS,
       RESPONSE_SUCCESS_MESSAGES.ONBOARDING_SUBMITTED,
+      result
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
+export const approveCaptain = async (req: Request, res: Response) => {
+  try {
+    const result = await approveCaptainService(
+      req.params?.captainId,
+      req.user?.id
+    );
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.CAPTAIN_APPROVED,
       result
     );
   } catch (error: any) {

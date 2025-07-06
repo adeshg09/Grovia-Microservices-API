@@ -31,6 +31,7 @@
     "mongoose": "^8.13.2",
     "multer": "^2.0.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "resend": "^4.6.0",
     "ts-node": "^10.9.2",
     "twilio": "^5.5.2",
     "typescript": "^5.8.3",

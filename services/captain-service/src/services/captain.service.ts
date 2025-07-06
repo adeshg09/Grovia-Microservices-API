@@ -3,6 +3,9 @@ import { RESPONSE_ERROR_MESSAGES, VehicleType } from "../constants";
 import { createCaptainProfileDto } from "../dtos/captain.dtos";
 import { Captain } from "../models/captain.model";
 import { authClient } from "../config/axios.config";
+import { sendEmail } from "../utils/email";
+import { getApprovalEmailTemplate } from "../utils/emailTemplate";
+import { KycDetails } from "../models/kycdetails.model";
 
 export const createCaptainProfileService = async (
   createCaptainProfileData: createCaptainProfileDto,
@@ -210,9 +213,22 @@ export const upsertOutletService = async (outletId: string, userId: string) => {
 
 export const submitOnboardingService = async (userId: string) => {
   const captain = await Captain.findOne({ userId });
+  const kycDetails = await KycDetails.findOne({ userId });
 
   if (!captain)
     throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_PROFILE_NOT_FOUND);
+
+  if (!captain.firstName || !captain.lastName || !captain.email) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_ONBOARDING_STEP1_PENDING);
+  }
+
+  if (!captain.vehicleType || !captain.workCity || !captain.outletId) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_ONBOARDING_STEP2_PENDING);
+  }
+
+  if (!kycDetails?.bankDetails) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_ONBOARDING_STEP3_PENDING);
+  }
 
   captain.isKYCComplete = true;
   captain.isApprovedByOutletAdmin = false;
@@ -222,5 +238,33 @@ export const submitOnboardingService = async (userId: string) => {
   return {
     message:
       "Your profile is now under review. You'll be notified once it’s approved by the outlet admin.",
+  };
+};
+
+export const approveCaptainService = async (
+  captainId: string,
+  outletAdminUserId: string
+) => {
+  const captain = await Captain.findById(captainId);
+
+  if (!captain) {
+    throw new Error(RESPONSE_ERROR_MESSAGES.CAPTAIN_NOT_FOUND);
+  }
+
+  captain.isApprovedByOutletAdmin = true;
+
+  await captain.save();
+
+  await sendEmail({
+    to: captain.email,
+    subject: "You're Approved as a Captain!",
+    html: getApprovalEmailTemplate(captain.firstName),
+  });
+
+  return {
+    captainId: captain._id,
+    fullName: `${captain.firstName} ${captain.lastName}`,
+    isApproved: captain.isApprovedByOutletAdmin,
+    message: "Captain approved and notified via email.",
   };
 };

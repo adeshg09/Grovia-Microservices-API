@@ -53,6 +53,8 @@ export const RESPONSE_SUCCESS_MESSAGES = {
     "KYC details submitted successfully and is under review",
 
   ONBOARDING_SUBMITTED: " Onboarding details submitted successfully",
+
+  CAPTAIN_APPROVED: "Captain approved successfully",
 };
 
 export const RESPONSE_ERROR_MESSAGES = {
@@ -69,4 +71,8 @@ export const RESPONSE_ERROR_MESSAGES = {
     "All documents must be verified before submitting KYC details",
 
   AADHAAR_ALREADY_VERIFIED: "Aadhaar already verified",
+
+  CAPTAIN_ONBOARDING_STEP1_PENDING: "Captain Onboarding step1 pending",
+  CAPTAIN_ONBOARDING_STEP2_PENDING: "Captain Onboarding step2 pending",
+  CAPTAIN_ONBOARDING_STEP3_PENDING: "Captain Onboarding step3 pending",
 };
