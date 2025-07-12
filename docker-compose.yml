@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    restart: always
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./services/auth-service/.env
+
+  customer-service:
+    build:
+      context: ./services/customer-service
+      dockerfile: Dockerfile
+    container_name: customer-service
+    restart: always
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./services/customer-service/.env
+
+  captain-service:
+    build:
+      context: ./services/captain-service
+    container_name: captain-service
+    restart: always
+    ports:
+      - "8003:8003"
+    env_file:
+      - ./services/captain-service/.env
+
+  admin-service:
+    build:
+      context: ./services/admin-service
+    container_name: admin-service
+    restart: always
+    ports:
+      - "8004:8004"
+    env_file:
+      - ./services/admin-service/.env
+
+  inventory-service:
+    build:
+      context: ./services/inventory-service
+    container_name: inventory-service
+    restart: always
+    ports:
+      - "8005:8005"
+    env_file:
+      - ./services/inventory-service/.env
+
+  gateway:
+    build:
+      context: ./gateway
+    container_name: gateway
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./gateway/.env
+
+  proxy:
+    build:
+      context: ./proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - gateway
