@@ -41,6 +41,10 @@ app.use("/api/v1/auth/users", UserRouter);
 // ======================
 //  Health Check
 // ======================
+app.get("/api/v1/auth/health", (req: Request, res: Response) => {
+  res.send("Gateway Auth Service OK");
+});
+
 app.get("/health", (req: Request, res: Response) => {
   res.send("Auth Service OK");
 });
