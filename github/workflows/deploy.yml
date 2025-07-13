@@ -1,4 +1,4 @@
-name: Auto Deploy to GCP Server and Send Email Notification
+name: Auto Deploy to GCP VM and Send Email Notification
 
 on:
   push:
