@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 
 // Health Check
 app.get("/health", (req, res) => {
-  res.send("Gateway OK");
+  res.send("Gateway running OK");
 });
 
 // Proxy routes to services
