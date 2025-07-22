@@ -7,16 +7,19 @@ import { createProductCategoryDto } from "../dtos/category.dtos";
 export const createProductCategory = async (
   createProductCategoryData: createProductCategoryDto
 ) => {
-  const { name, description, image } = createProductCategoryData;
+  const { name, slug, description, image, parentCategoryId } =
+    createProductCategoryData;
 
-  if (!name) {
+  if (!name || !slug) {
     throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
   }
 
   const category = new Category({
     name,
+    slug,
     description,
     image,
+    parentCategoryId,
   });
   await category.save();
   return { category };
@@ -27,8 +30,10 @@ export const getCategoryDetailsByIdService = async (categoryId: string) => {
 
   const categoryData = {
     name: category?.name,
+    slug: category?.slug,
     description: category?.description,
     image: category?.image,
+    parentCategoryId: category?.parentCategoryId,
   };
 
   return categoryData ? categoryData : null;
@@ -40,8 +45,10 @@ export const getAllCategoriesService = async () => {
   const categories = categoriesData.map((category) => ({
     id: category._id,
     name: category.name,
+    slug: category.slug,
     description: category.description,
     image: category.image,
+    parentCategoryId: category.parentCategoryId,
   }));
 
   return { categories };

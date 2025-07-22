@@ -6,9 +6,9 @@ export interface IProduct extends Document {
   slug: string;
   description: string;
   categoryId: Schema.Types.ObjectId;
-  subCategoryId?: Schema.Types.ObjectId;
-  images: string[];
-  thumbnail: string;
+  subCategoryId: Schema.Types.ObjectId;
+  images?: string[];
+  thumbnail?: string;
   brand?: string;
   quantity: number;
   unit: PRODUCT_UNITS;
@@ -28,9 +28,10 @@ const ProductSchema = new Schema<IProduct>(
     subCategoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
+      required: true,
     },
-    images: [{ type: String, required: true }],
-    thumbnail: { type: String, required: true },
+    images: [{ type: String }],
+    thumbnail: { type: String },
     brand: { type: String },
     quantity: { type: Number, default: 0 },
     unit: { type: String, required: true },
