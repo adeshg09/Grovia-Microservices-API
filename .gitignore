@@ -5,3 +5,5 @@ dist/
 *.log
 package-lock.json
 .git-credentials
+github-actions
+github-actions.pub
