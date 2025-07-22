@@ -265,11 +265,11 @@ export const approveCaptainService = async (
 
   const { data: userData } = activationResponse.data;
 
-  await sendEmail({
-    to: captain.email,
-    subject: "You're Approved as a Captain!",
-    html: getApprovalEmailTemplate(captain.firstName),
-  });
+  // await sendEmail({
+  //   to: captain.email,
+  //   subject: "You're Approved as a Captain!",
+  //   html: getApprovalEmailTemplate(captain.firstName),
+  // });
 
   return {
     captainId: captain._id,
