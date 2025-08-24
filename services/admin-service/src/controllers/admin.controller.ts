@@ -78,7 +78,7 @@ export const getoutletAdminProfileByUserId = async (
 ) => {
   try {
     const adminDetails = await getoutletAdminProfileByUserIdService(
-      req.user?.id
+      req.params?.userId
     );
     return successResponse(
       res,
@@ -93,7 +93,7 @@ export const getoutletAdminProfileByUserId = async (
       STATUS_CODES.BAD_REQUEST,
       RESPONSE_MESSAGES.BAD_REQUEST,
       error.message,
-      error
+      {}
     );
   }
 };

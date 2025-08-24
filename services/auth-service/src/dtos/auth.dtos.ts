@@ -1,5 +1,10 @@
 import { JwtPayload } from "jsonwebtoken";
-import { SEND_OTP_CHANNEL, USER_ROLES } from "../constants";
+import {
+  CHANNEL_TYPES,
+  CLIENT_TYPES,
+  SEND_OTP_CHANNEL,
+  USER_ROLES,
+} from "../constants";
 
 export interface TokenPayload extends JwtPayload {
   userId: string;
@@ -15,6 +20,8 @@ export interface OtpDTO {
   phoneNumber: string;
   countryCode: string;
   channel: SEND_OTP_CHANNEL;
+  clientType: CLIENT_TYPES;
+  channelType?: CHANNEL_TYPES;
 }
 
 export interface verifyOtpDto {
@@ -23,4 +30,19 @@ export interface verifyOtpDto {
   otp?: string;
   role: USER_ROLES;
   isTruecaller?: boolean;
+  clientType: CLIENT_TYPES;
+}
+
+export interface selectLoginOptionDto {
+  userId: string;
+  selectedRole: USER_ROLES;
+  selectedOutletId?: string;
+  clientType: CLIENT_TYPES;
+}
+
+export interface SwitchAccountDto {
+  selectedRole: string;
+  selectedOutletId?: string;
+  clientType: string;
+  currentUserId: string;
 }

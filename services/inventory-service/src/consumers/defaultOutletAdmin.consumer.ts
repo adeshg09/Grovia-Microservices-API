@@ -7,6 +7,7 @@ export const defaultOutletAdminCreatedConsumer = async () => {
   try {
     await subscribeToQueue("defaultOutletAdmin_created_queue", async (msg) => {
       if (!msg) return;
+      console.log("msg", msg);
 
       const { adminId, userId, firstName, lastName, email } = JSON.parse(
         msg.content.toString()
@@ -27,7 +28,6 @@ export const defaultOutletAdminCreatedConsumer = async () => {
               .DEFAULT_OUTLET_LOCATION_COORDINATES!.split(",")
               .map(Number),
           },
-
           contactNumber: envConfig.DEFAULT_OUTLET_CONTACTNUMBER,
           type: OUTLET_TYPE.PRIMARY,
           status: OUTLET_STATUS.OPEN,

@@ -126,6 +126,7 @@ export const getAdminProfile = async (userId: string, token: string) => {
   );
 
   const { data: adminUserData } = response.data;
+  console.log("adminUserData for checking availableAccounts", adminUserData);
 
   const outletResponse = await inventoryClient.get(
     `/outlets/get-outlet-details-by-adminId/${adminData._id}`,
@@ -142,6 +143,7 @@ export const getAdminProfile = async (userId: string, token: string) => {
     role: adminUserData?.role,
     profileImage: adminData.profileImage,
     outlet: outletData,
+    availableAccounts: adminUserData?.availableAccounts ?? [],
   };
 
   return adminProfile;

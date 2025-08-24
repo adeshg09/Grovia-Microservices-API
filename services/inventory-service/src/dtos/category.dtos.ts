@@ -5,3 +5,9 @@ export interface createProductCategoryDto {
   image?: string;
   parentCategoryId?: string;
 }
+
+export interface getAllCategoriesDto {
+  parentCategoryId?: string;
+  page?: number;
+  limit?: number;
+}

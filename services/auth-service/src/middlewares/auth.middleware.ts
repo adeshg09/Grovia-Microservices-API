@@ -13,11 +13,15 @@ interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
     role: string;
+    outletId?: string;
+  };
+  otpVerification?: {
+    isOtpVerified: boolean;
   };
 }
 
 export const authenticate = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -43,6 +47,46 @@ export const authenticate = async (
     req.user = {
       id: decoded.userId,
       role: decoded.role,
+      outletId: decoded.outletId,
+    };
+    next();
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.UNAUTHORIZED,
+      RESPONSE_MESSAGES.UNAUTHORIZED,
+      RESPONSE_ERROR_MESSAGES.TOKEN_INVALID,
+      error.message
+    );
+  }
+};
+
+export const authenticateTempToken = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const token = req.headers.authorization?.split(" ")[1];
+  console.log("temp token", token);
+
+  if (!token) {
+    return errorResponse(
+      res,
+      STATUS_CODES.UNAUTHORIZED,
+      RESPONSE_MESSAGES.UNAUTHORIZED,
+      RESPONSE_ERROR_MESSAGES.TEMP_TOKEN_REQUIRED,
+      {}
+    );
+  }
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      envConfig.TEMP_TOKEN_SECRET!
+    ) as JwtPayload;
+
+    req.otpVerification = {
+      isOtpVerified: decoded.isOtpVerified,
     };
     next();
   } catch (error: any) {

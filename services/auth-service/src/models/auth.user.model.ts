@@ -7,6 +7,7 @@ export interface IUser extends Document {
   status: USER_STATUS;
   isActivated: boolean;
   isPhoneVerified: boolean;
+  availableAccounts?: any[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -16,6 +17,7 @@ const UserSchema = new Schema<IUser>(
     status: { type: String, required: true, enum: Object.values(USER_STATUS) },
     isActivated: { type: Boolean, default: false },
     isPhoneVerified: { type: Boolean, default: false },
+    availableAccounts: [{ type: Object }],
   },
   { timestamps: true }
 );

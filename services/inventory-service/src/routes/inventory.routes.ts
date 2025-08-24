@@ -8,6 +8,7 @@ import {
   getInventoryDetailsById,
   getInventoryDetailsByOutletId,
   getInventoryDetailsByProductId,
+  getInventoryProductDetailsByOutletId,
 } from "../controllers/inventory.controller";
 import { USER_ROLES } from "../constants";
 
@@ -53,6 +54,13 @@ router.get(
   authenticate,
   authorize([USER_ROLES.SUPER_ADMIN]),
   getInventoryDetailsByProductId
+);
+
+router.get(
+  "/get-inventory-products-details-by-outletId",
+  authenticate,
+  authorize([USER_ROLES.CUSTOMER, USER_ROLES.SUPER_ADMIN]),
+  getInventoryProductDetailsByOutletId
 );
 
 router.get(

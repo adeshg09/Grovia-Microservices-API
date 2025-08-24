@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
     container_name: customer-service
     restart: always
+    depends_on:
+      - auth-service
     ports:
       - "8002:8002"
     env_file:
@@ -29,6 +31,8 @@ services:
       dockerfile: Dockerfile
     container_name: captain-service
     restart: always
+    depends_on:
+      - auth-service
     ports:
       - "8003:8003"
     env_file:
@@ -40,6 +44,8 @@ services:
       dockerfile: Dockerfile
     container_name: admin-service
     restart: always
+    depends_on:
+      - auth-service
     ports:
       - "8004:8004"
     env_file:
@@ -51,6 +57,8 @@ services:
       dockerfile: Dockerfile
     container_name: inventory-service
     restart: always
+    depends_on:
+      - admin-service
     ports:
       - "8005:8005"
     env_file:
@@ -70,7 +78,7 @@ services:
   proxy:
     build:
       context: ./proxy
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: nginx-proxy
     ports:
       - "80:80"

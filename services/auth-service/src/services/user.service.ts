@@ -15,6 +15,7 @@ export const getUserByIdService = async (userId: string) => {
     status: user?.status,
     isActivated: user?.isActivated,
     isPhoneVerified: user?.isPhoneVerified,
+    availableAccounts: user?.availableAccounts,
   };
 
   return userData ? userData : null;

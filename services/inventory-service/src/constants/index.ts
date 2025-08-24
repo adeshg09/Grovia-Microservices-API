@@ -80,4 +80,9 @@ export const RESPONSE_ERROR_MESSAGES = {
   OUTLET_NOT_FOUND: "Outlet not found",
   INVENTORY_ALREADY_EXISTS:
     "Inventory record already exists for this product at this outlet",
+  NEAREST_OUTLET_NOT_FOUND: {
+    title: "Sorry, we're not here yet!",
+    message:
+      "Grovia is not at this location at the moment. Please try a different location.",
+  },
 };
