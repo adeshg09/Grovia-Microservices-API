@@ -30,4 +30,7 @@ export const envConfig = {
   SUPER_ADMIN_ROLE: process.env.SUPER_ADMIN_ROLE || "super-admin",
   ZOHO_EMAIL: process.env.ZOHO_EMAIL,
   ZOHO_PASSWORD: process.env.ZOHO_PASSWORD,
+
+  OTP_PROVIDER: process.env.OTP_PROVIDER || "mock",
+  OTP_MOCK: process.env.OTP_MOCK || "123456",
 };

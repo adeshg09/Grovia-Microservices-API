@@ -13,6 +13,7 @@ import {
   getNearestOutletDetailsByLocationCoordinatesService,
   getOutletDetailsByAdminIdService,
   getOutletDetailsByIdService,
+  getOutletsDetailByAdminIdsService,
 } from "../services/outlet.service";
 
 export const createOutlet = async (req: Request, res: Response) => {
@@ -73,6 +74,30 @@ export const getOutletDetailsByAdminId = async (
       RESPONSE_MESSAGES.SUCCESS,
       RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.OUTLET),
       { ...outletDetails }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
+export const getOutletsDetailByAdminIds = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const outlets = await getOutletsDetailByAdminIdsService(req.body.adminIds);
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.OUTLET),
+      { outlets }
     );
   } catch (error: any) {
     return errorResponse(

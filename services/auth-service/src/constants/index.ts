@@ -10,19 +10,13 @@ export enum CLIENT_TYPES {
   MOBILE = "mobile",
 }
 
-export enum CHANNEL_TYPES {
-  SMS = "sms",
-  EMAIL = "email",
-  WHATSAPP = "whatsapp",
-}
-
 export enum USER_STATUS {
   ACTIVE = "active",
   PENDING = "pending",
   BLOCKED = "blocked",
 }
 
-export enum SEND_OTP_CHANNEL {
+export enum OTP_CHANNEL {
   SMS = "sms",
   EMAIL = "email",
   WHATSAPP = "whatsapp",

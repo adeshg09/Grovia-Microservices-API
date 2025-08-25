@@ -104,6 +104,25 @@ export const getOutletDetailsByAdminIdService = async (adminId: string) => {
   return outletData ? outletData : null;
 };
 
+export const getOutletsDetailByAdminIdsService = async (adminIds: string[]) => {
+  const outlets = await Outlet.find({ adminId: { $in: adminIds } });
+
+  return outlets.map((outlet) => ({
+    id: outlet._id,
+    adminId: outlet.adminId,
+    name: outlet.name,
+    address: outlet.address,
+    city: outlet.city,
+    state: outlet.state,
+    country: outlet.country,
+    pincode: outlet.pincode,
+    location: outlet.location,
+    contactNumber: outlet.contactNumber,
+    status: outlet.status,
+    isActive: outlet.isActive,
+  }));
+};
+
 export const getAllOutletDetailsService = async (
   // token: string,
   queryParams: getAllOutletDetailsDto

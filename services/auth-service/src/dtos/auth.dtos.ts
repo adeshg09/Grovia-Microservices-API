@@ -1,10 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
-import {
-  CHANNEL_TYPES,
-  CLIENT_TYPES,
-  SEND_OTP_CHANNEL,
-  USER_ROLES,
-} from "../constants";
+import { CLIENT_TYPES, OTP_CHANNEL, USER_ROLES } from "../constants";
 
 export interface TokenPayload extends JwtPayload {
   userId: string;
@@ -19,9 +14,8 @@ export interface Tokens {
 export interface OtpDTO {
   phoneNumber: string;
   countryCode: string;
-  channel: SEND_OTP_CHANNEL;
+  channel: OTP_CHANNEL;
   clientType: CLIENT_TYPES;
-  channelType?: CHANNEL_TYPES;
 }
 
 export interface verifyOtpDto {

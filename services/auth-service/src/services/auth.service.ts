@@ -1,7 +1,7 @@
 import axios from "axios";
 import {
-  CHANNEL_TYPES,
   CLIENT_TYPES,
+  OTP_CHANNEL,
   RESPONSE_ERROR_MESSAGES,
   USER_ROLES,
 } from "../constants";
@@ -13,7 +13,12 @@ import {
 } from "../dtos/auth.dtos";
 import { User } from "../models/auth.user.model";
 import { formatPhoneNumber } from "../utils";
-import { sendOTPViaTwilio, verifyOtpViaTwilio } from "../utils/sms.otp";
+import {
+  sendOTP,
+  sendOTPViaTwilio,
+  verifyOtp,
+  verifyOtpViaTwilio,
+} from "../utils/sms.otp";
 import {
   createUserProfile,
   getAdminProfile,
@@ -31,9 +36,8 @@ export const initiateSendOtp = async (otpData: OtpDTO) => {
   const {
     phoneNumber,
     countryCode,
-    channel,
+    channel = OTP_CHANNEL.SMS,
     clientType,
-    channelType = CHANNEL_TYPES.SMS,
   } = otpData;
 
   if (!phoneNumber || !countryCode || !clientType) {
@@ -56,7 +60,7 @@ export const initiateSendOtp = async (otpData: OtpDTO) => {
   }
 
   // try {
-  return await sendOTPViaTwilio(phoneNumber, countryCode, channel);
+  return await sendOTP(phoneNumber, countryCode, channel);
   // } catch (err) {
   //   console.error("Twilio failed, falling back to Firebase", err);
   //   return await sendOTPViaFirebase(phoneNumber, countryCode);
@@ -69,11 +73,12 @@ export const initiateVerifyOtp = async (verifyOtpData: verifyOtpDto) => {
 
   if (!verifyOtpData.isTruecaller) {
     // try {
-    const verification = await verifyOtpViaTwilio(
+    const verification = await verifyOtp(
       verifyOtpData.phoneNumber,
       verifyOtpData.otp!,
       verifyOtpData.countryCode
     );
+
     if (verification.status !== "approved") {
       throw new Error(RESPONSE_ERROR_MESSAGES.TOKEN_INVALID);
     }

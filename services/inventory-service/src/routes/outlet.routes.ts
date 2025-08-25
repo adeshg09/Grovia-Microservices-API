@@ -8,6 +8,7 @@ import {
   getNearestOutletDetailsByLocationCoordinates,
   getOutletDetailsByAdminId,
   getOutletDetailsById,
+  getOutletsDetailByAdminIds,
 } from "../controllers/outlet.controller";
 import { USER_ROLES } from "../constants";
 
@@ -46,6 +47,13 @@ router.get(
   authenticate,
   authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.OUTLET_ADMIN]),
   getOutletDetailsByAdminId
+);
+
+router.post(
+  "/get-outlets-detail-by-adminIds",
+  authenticate,
+  authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.OUTLET_ADMIN]),
+  getOutletsDetailByAdminIds
 );
 
 router.get(

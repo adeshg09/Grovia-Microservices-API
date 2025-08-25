@@ -4,6 +4,7 @@ import { Router } from "express";
 import {
   createUser,
   getUserById,
+  getUsersByIds,
   updateUserActivation,
   updateUserStatus,
 } from "../controllers/user.controller";
@@ -28,6 +29,13 @@ router.get(
   authenticate,
   authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.OUTLET_ADMIN]),
   getUserById
+);
+
+router.post(
+  "/get-users-by-ids",
+  authenticate,
+  authorize([USER_ROLES.SUPER_ADMIN, USER_ROLES.OUTLET_ADMIN]),
+  getUsersByIds
 );
 
 // router.get("/get-all-users", authenticate, getAllUsers);
