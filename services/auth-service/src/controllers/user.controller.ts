@@ -8,9 +8,31 @@ import { successResponse, errorResponse } from "../utils/response";
 import {
   createUserService,
   getUserByIdService,
+  getUsersByIdsService,
   updateUserActivationService,
   updateUserStatusService,
 } from "../services/user.service";
+
+export const createUser = async (req: Request, res: Response) => {
+  try {
+    const newUser = await createUserService(req.body);
+    return successResponse(
+      res,
+      STATUS_CODES.CREATED,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.USER_CREATED,
+      { user: newUser }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
@@ -33,15 +55,18 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const getUsersByIds = async (req: Request, res: Response) => {
   try {
-    const newUser = await createUserService(req.body);
+    const { userIds } = req.body;
+
+    const users = await getUsersByIdsService(userIds);
+
     return successResponse(
       res,
-      STATUS_CODES.CREATED,
+      STATUS_CODES.OK,
       RESPONSE_MESSAGES.SUCCESS,
-      RESPONSE_SUCCESS_MESSAGES.USER_CREATED,
-      { user: newUser }
+      RESPONSE_SUCCESS_MESSAGES.USER_DETAILS_FETCHED,
+      { users }
     );
   } catch (error: any) {
     return errorResponse(

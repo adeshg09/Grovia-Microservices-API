@@ -58,13 +58,14 @@ export const getCategoryDetailsById = async (req: Request, res: Response) => {
 
 export const getAllCategoryDetails = async (req: Request, res: Response) => {
   try {
-    const { categories } = await getAllCategoriesService();
+    console.log("req.query", req.query);
+    const allCategoryDetails = await getAllCategoriesService(req.query);
     return successResponse(
       res,
       STATUS_CODES.OK,
       RESPONSE_MESSAGES.SUCCESS,
       RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.CATEGORY),
-      { categories }
+      allCategoryDetails
     );
   } catch (error: any) {
     return errorResponse(

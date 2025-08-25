@@ -13,6 +13,7 @@ export interface IOutlet extends Document {
     type: "Point";
     coordinates: [number, number];
   };
+  servingRadiusInKm: number;
   contactNumber: string;
   captains: Schema.Types.ObjectId[];
   status: OUTLET_STATUS;
@@ -27,7 +28,6 @@ const OutletSchema = new Schema<IOutlet>(
       type: Schema.Types.ObjectId,
       ref: "Admin",
       required: true,
-      unique: true,
     },
     name: { type: String, required: true },
     address: { type: String, required: true },
@@ -46,6 +46,11 @@ const OutletSchema = new Schema<IOutlet>(
         type: [Number],
         required: true,
       },
+    },
+    servingRadiusInKm: {
+      type: Number,
+      required: true,
+      default: 5,
     },
     contactNumber: { type: String, required: true },
     captains: [
@@ -71,6 +76,6 @@ const OutletSchema = new Schema<IOutlet>(
   { timestamps: true }
 );
 
-OutletSchema.index({ coordinates: "2dsphere" });
+OutletSchema.index({ location: "2dsphere" });
 
 export const Outlet = model<IOutlet>("Outlet", OutletSchema);

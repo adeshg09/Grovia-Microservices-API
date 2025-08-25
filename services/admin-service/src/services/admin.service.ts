@@ -4,6 +4,7 @@ import { createOutletAdminProfileDto } from "../dtos/customer.dtos";
 import { Admin } from "../models/admin.model";
 import { envConfig } from "../config/env.config";
 import { authClient, inventoryClient } from "../config/axios.config";
+import { createAdminProfile } from "../lib/admin.lib";
 
 export const createOutletAdminProfileService = async (
   createOutletAdminProfileData: createOutletAdminProfileDto,
@@ -99,18 +100,52 @@ export const getoutletAdminProfileByUserIdService = async (userId: string) => {
   return adminData ? adminData : null;
 };
 
-export const getAlloutletAdminsProfileService = async () => {
+export const getAlloutletAdminsProfileService = async (token: string) => {
   const adminsProfile = await Admin.find();
 
-  const admins = adminsProfile.map((admin) => ({
-    id: admin._id,
-    userId: admin.userId,
-    firstName: admin.firstName,
-    lastName: admin.lastName,
-    email: admin.email,
-    profileImage: admin.profileImage,
-  }));
-  return { admins };
+  const userIds = adminsProfile.map((a) => a.userId);
+  const adminIds = adminsProfile.map((a) => a._id);
+
+  const [usersResponse, outletsResponse] = await Promise.all([
+    authClient.post(`/users/get-users-by-ids`, { userIds }, token),
+    inventoryClient.post(
+      `/outlets/get-outlets-detail-by-adminIds`,
+      { adminIds },
+      token
+    ),
+  ]);
+
+  const usersData = usersResponse.data.data.users;
+  const outletsData = outletsResponse.data.data.outlets;
+
+  const admins = adminsProfile.map((admin) => {
+    let adminUserData = usersData.find(
+      (u: any) => u.id === String(admin.userId)
+    );
+
+    if (adminUserData) {
+      // normalize
+      adminUserData = {
+        ...adminUserData,
+        _id: adminUserData.id, // add _id alias
+      };
+    }
+
+    const outletData = outletsData.filter(
+      (o: any) => o.adminId === String(admin._id)
+    );
+
+    return createAdminProfile(adminUserData, {
+      profile: admin,
+      outlets: outletData,
+    });
+  });
+
+  const filteredAdmins = admins.filter(
+    (admin) => admin.role !== USER_ROLES.SUPER_ADMIN
+  );
+
+  return { admins: filteredAdmins };
 };
 
 export const getAdminProfile = async (userId: string, token: string) => {
@@ -126,6 +161,7 @@ export const getAdminProfile = async (userId: string, token: string) => {
   );
 
   const { data: adminUserData } = response.data;
+  console.log("adminUserData for checking availableAccounts", adminUserData);
 
   const outletResponse = await inventoryClient.get(
     `/outlets/get-outlet-details-by-adminId/${adminData._id}`,
@@ -142,6 +178,7 @@ export const getAdminProfile = async (userId: string, token: string) => {
     role: adminUserData?.role,
     profileImage: adminData.profileImage,
     outlet: outletData,
+    availableAccounts: adminUserData?.availableAccounts ?? [],
   };
 
   return adminProfile;

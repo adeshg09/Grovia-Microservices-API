@@ -6,7 +6,7 @@ export const successResponse = (
   response_code = STATUS_CODES.OK,
   response_message = RESPONSE_MESSAGES.SUCCESS,
   message: any,
-  data: any = {}
+  data?: any
 ) => {
   res.status(response_code).json({
     status: {
@@ -24,15 +24,44 @@ export const errorResponse = (
   response_code = STATUS_CODES.BAD_REQUEST,
   response_message = RESPONSE_MESSAGES.BAD_REQUEST,
   message: any,
-  error: any
+  error?: any
 ) => {
+  // Safely extract error information without circular references
+  let errorData = {};
+
+  if (error) {
+    // If it's an Axios error
+    if (error.response) {
+      errorData = {
+        statusCode: error.response.status,
+        data: error.response.data,
+      };
+    }
+    // If it's a regular error object
+    else if (error.message) {
+      errorData = {
+        message: error.message,
+        name: error.name,
+        ...(error.stack && { stack: error.stack }),
+      };
+    }
+    // If it's already a plain object
+    else if (typeof error === "object" && error.constructor === Object) {
+      errorData = error;
+    }
+    // If it's a string or primitive
+    else {
+      errorData = { error: error };
+    }
+  }
+
   res.status(response_code).json({
     status: {
       response_code,
       response_message,
     },
     message,
-    ...(error && error),
+    ...(Object.keys(errorData).length > 0 && { error: errorData }),
   });
   return;
 };

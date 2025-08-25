@@ -10,5 +10,16 @@ export interface createVendorOutletDto {
     latitude: number;
     longitude: number;
   };
+  servingRadiusInKm: number;
   contactNumber: string;
+}
+
+export interface getAllOutletDetailsDto {
+  city?: string;
+  adminId?: string;
+}
+
+export interface getNearestOutletDetailsByLocationCoordinatesDto {
+  latitude: number | string;
+  longitude: number | string;
 }

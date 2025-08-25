@@ -10,8 +10,10 @@ import {
 import {
   createVendorOutlet,
   getAllOutletDetailsService,
+  getNearestOutletDetailsByLocationCoordinatesService,
   getOutletDetailsByAdminIdService,
   getOutletDetailsByIdService,
+  getOutletsDetailByAdminIdsService,
 } from "../services/outlet.service";
 
 export const createOutlet = async (req: Request, res: Response) => {
@@ -84,25 +86,46 @@ export const getOutletDetailsByAdminId = async (
   }
 };
 
+export const getOutletsDetailByAdminIds = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const outlets = await getOutletsDetailByAdminIdsService(req.body.adminIds);
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.OUTLET),
+      { outlets }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
 export const getAllOutletDetails = async (req: Request, res: Response) => {
   try {
     console.log("req.query", req.query);
-    const token = req.headers.authorization?.split(" ")[1];
+    // const token = req.headers.authorization?.split(" ")[1];
 
-    if (!token) {
-      return errorResponse(
-        res,
-        STATUS_CODES.UNAUTHORIZED,
-        RESPONSE_MESSAGES.UNAUTHORIZED,
-        RESPONSE_ERROR_MESSAGES.ACCESS_TOKEN_REQUIRED,
-        {}
-      );
-    }
+    // if (!token) {
+    //   return errorResponse(
+    //     res,
+    //     STATUS_CODES.UNAUTHORIZED,
+    //     RESPONSE_MESSAGES.UNAUTHORIZED,
+    //     RESPONSE_ERROR_MESSAGES.ACCESS_TOKEN_REQUIRED,
+    //     {}
+    //   );
+    // }
 
-    const { outlets } = await getAllOutletDetailsService(
-      token,
-      req.query?.city as string
-    );
+    const { outlets } = await getAllOutletDetailsService(req.query);
 
     return successResponse(
       res,
@@ -119,6 +142,31 @@ export const getAllOutletDetails = async (req: Request, res: Response) => {
       RESPONSE_MESSAGES.BAD_REQUEST,
       error.message,
       {}
+    );
+  }
+};
+
+export const getNearestOutletDetailsByLocationCoordinates = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const outletDetails =
+      await getNearestOutletDetailsByLocationCoordinatesService(req.query);
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.OUTLET),
+      { nearestOutletDetails: outletDetails }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
     );
   }
 };

@@ -18,6 +18,7 @@ export const seedSuperadmin = async () => {
         status: USER_STATUS.ACTIVE,
         isActivated: true,
         isPhoneVerified: true,
+        availableAccounts: [],
       });
       await newUser.save();
       await publishToQueue("user_created_queue", {
@@ -45,6 +46,7 @@ export const seedSuperadmin = async () => {
         status: USER_STATUS.ACTIVE,
         isActivated: true,
         isPhoneVerified: true,
+        availableAccounts: [],
       });
       await newUser.save();
       await publishToQueue("user_created_queue", {

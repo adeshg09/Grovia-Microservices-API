@@ -78,7 +78,7 @@ export const getoutletAdminProfileByUserId = async (
 ) => {
   try {
     const adminDetails = await getoutletAdminProfileByUserIdService(
-      req.user?.id
+      req.params?.userId
     );
     return successResponse(
       res,
@@ -93,7 +93,7 @@ export const getoutletAdminProfileByUserId = async (
       STATUS_CODES.BAD_REQUEST,
       RESPONSE_MESSAGES.BAD_REQUEST,
       error.message,
-      error
+      {}
     );
   }
 };
@@ -103,7 +103,20 @@ export const getAllOutletAdminsProfile = async (
   res: Response
 ) => {
   try {
-    const { admins } = await getAlloutletAdminsProfileService();
+    const token = req.headers.authorization?.split(" ")[1];
+    console.log("token", token);
+
+    if (!token) {
+      return errorResponse(
+        res,
+        STATUS_CODES.UNAUTHORIZED,
+        RESPONSE_MESSAGES.UNAUTHORIZED,
+        RESPONSE_ERROR_MESSAGES.ACCESS_TOKEN_REQUIRED,
+        {}
+      );
+    }
+    const { admins } = await getAlloutletAdminsProfileService(token);
+
     return successResponse(
       res,
       STATUS_CODES.OK,

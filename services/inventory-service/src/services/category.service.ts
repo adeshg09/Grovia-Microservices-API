@@ -1,8 +1,11 @@
 import axios from "axios";
 import { RESPONSE_ERROR_MESSAGES } from "../constants";
 import { envConfig } from "../config/env.config";
-import { Category } from "../models/category.model";
-import { createProductCategoryDto } from "../dtos/category.dtos";
+import { Category, ICategory } from "../models/category.model";
+import {
+  createProductCategoryDto,
+  getAllCategoriesDto,
+} from "../dtos/category.dtos";
 
 export const createProductCategory = async (
   createProductCategoryData: createProductCategoryDto
@@ -39,17 +42,90 @@ export const getCategoryDetailsByIdService = async (categoryId: string) => {
   return categoryData ? categoryData : null;
 };
 
-export const getAllCategoriesService = async () => {
-  const categoriesData = await Category.find();
+export const getAllCategoriesService = async (
+  queryParams: getAllCategoriesDto
+) => {
+  const { parentCategoryId, page = 1, limit = 10 } = queryParams;
 
-  const categories = categoriesData.map((category) => ({
-    id: category._id,
-    name: category.name,
-    slug: category.slug,
-    description: category.description,
-    image: category.image,
-    parentCategoryId: category.parentCategoryId,
+  const pageNumber = Number(page);
+  const pageSize = Number(limit);
+  const skipSize = (pageNumber - 1) * pageSize;
+
+  // ---------------------
+  // Case 1: Subcategories of a specific parent
+  // ---------------------
+  if (parentCategoryId) {
+    console.log("check");
+    const [subcategories, totalSubcategories] = await Promise.all([
+      Category.find({ parentCategoryId }).skip(skipSize).limit(pageSize),
+      Category.countDocuments({ parentCategoryId }),
+    ]);
+
+    const formattedSubcategories = subcategories.map((category: any) => ({
+      id: category._id,
+      name: category.name,
+      slug: category.slug,
+      description: category.description,
+      image: category.image,
+      parentCategoryId: category.parentCategoryId,
+    }));
+
+    return {
+      categories: formattedSubcategories,
+      totalRecords: totalSubcategories,
+      currentPage: pageNumber,
+      totalPages: Math.ceil(totalSubcategories / pageSize),
+    };
+  }
+
+  // ---------------------
+  // Case 2: Parent Categories with Their Children
+  // ---------------------
+  const [parentCategories, totalParentCategories] = await Promise.all([
+    Category.find({ parentCategoryId: null }).skip(skipSize).limit(pageSize),
+    Category.countDocuments({ parentCategoryId: null }),
+  ]);
+  console.log("check2");
+
+  const parentCategoryIds = parentCategories.map((cat: any) => cat._id);
+
+  // Fetch all children for the fetched parents
+  const childCategories = await Category.find({
+    parentCategoryId: { $in: parentCategoryIds },
+  });
+
+  const childrenGroupedByParent = new Map<string, any[]>();
+  childCategories.forEach((child: any) => {
+    const parentId = String(child.parentCategoryId);
+    if (!childrenGroupedByParent.has(parentId)) {
+      childrenGroupedByParent.set(parentId, []);
+    }
+
+    childrenGroupedByParent.get(parentId)!.push({
+      id: child._id,
+      name: child.name,
+      slug: child.slug,
+      description: child.description,
+      image: child.image,
+      parentCategoryId: child.parentCategoryId,
+    });
+  });
+
+  // Attach children to their parent
+  const formattedCategories = parentCategories.map((parent: any) => ({
+    id: parent._id,
+    name: parent.name,
+    slug: parent.slug,
+    description: parent.description,
+    image: parent.image,
+    parentCategoryId: parent.parentCategoryId,
+    children: childrenGroupedByParent.get(String(parent._id)) || [],
   }));
 
-  return { categories };
+  return {
+    categories: formattedCategories,
+    totalRecords: totalParentCategories,
+    currentPage: pageNumber,
+    totalPages: Math.ceil(totalParentCategories / pageSize),
+  };
 };

@@ -12,6 +12,7 @@ import {
   getInventoryDetailsByIdService,
   getInventoryDetailsByOutletIdService,
   getInventoryDetailsByProductIdService,
+  getInventoryProductDetailsByOutletIdService,
 } from "../services/inventory.service";
 
 export const createInventory = async (req: Request, res: Response) => {
@@ -98,6 +99,31 @@ export const getInventoryDetailsByProductId = async (
       RESPONSE_MESSAGES.SUCCESS,
       RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.INVENTORY),
       { ...inventoryDetails }
+    );
+  } catch (error: any) {
+    return errorResponse(
+      res,
+      STATUS_CODES.BAD_REQUEST,
+      RESPONSE_MESSAGES.BAD_REQUEST,
+      error.message,
+      error
+    );
+  }
+};
+
+export const getInventoryProductDetailsByOutletId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    // const { inventoryProducts } =
+    //   await getInventoryProductDetailsByOutletIdService(req.query);
+    return successResponse(
+      res,
+      STATUS_CODES.OK,
+      RESPONSE_MESSAGES.SUCCESS,
+      RESPONSE_SUCCESS_MESSAGES.fetched(MODEL_ENTITIES.INVENTORY)
+      // { inventoryProductsDetail: inventoryProducts }
     );
   } catch (error: any) {
     return errorResponse(

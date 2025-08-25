@@ -1,6 +1,9 @@
 import { RESPONSE_ERROR_MESSAGES } from "../constants";
 import { Inventory } from "../models/inventory.model";
-import { createInventoryDto } from "../dtos/inventory.dtos";
+import {
+  createInventoryDto,
+  getInventoryProductDetailsByOutletIdDto,
+} from "../dtos/inventory.dtos";
 
 export const createInventoryRecord = async (
   createInventoryData: createInventoryDto
@@ -49,19 +52,23 @@ export const getInventoryDetailsByIdService = async (inventoryId: string) => {
 export const getInventoryDetailsByOutletIdService = async (
   outletId: string
 ) => {
-  const inventory = await Inventory.findOne({ outletId: outletId });
+  const inventoryDocuments = await Inventory.find({
+    outletId: outletId,
+  }).populate("outletId productId"); // returns an array
 
-  const inventoryData = {
-    outletId: inventory?.outletId,
-    productId: inventory?.productId,
-    stock: inventory?.stock,
-    price: inventory?.price,
-    discount: inventory?.discount,
-    status: inventory?.status,
-    isAvailable: inventory?.isAvailable,
-  };
+  if (!inventoryDocuments || inventoryDocuments.length === 0) return [];
 
-  return inventoryData ? inventoryData : null;
+  const inventoryData = inventoryDocuments.map((inv: any) => ({
+    outlet: inv.outletId,
+    productId: inv.productId,
+    stock: inv.stock,
+    price: inv.price,
+    discount: inv.discount,
+    status: inv.status,
+    isAvailable: inv.isAvailable,
+  }));
+
+  return inventoryData;
 };
 
 export const getInventoryDetailsByProductIdService = async (
@@ -80,6 +87,24 @@ export const getInventoryDetailsByProductIdService = async (
   };
 
   return inventoryData ? inventoryData : null;
+};
+
+export const getInventoryProductDetailsByOutletIdService = async (
+  queryParams: getInventoryProductDetailsByOutletIdDto
+) => {
+  // const {
+  //   outletId,
+  //   categoryId,
+  //   subCategoryId,
+  //   page = 1,
+  //   limit = 10,
+  // } = queryParams;
+  // const pageNumber = Number(page);
+  // const pageSize = Number(limit);
+  // const skipSize = (pageNumber - 1) * pageSize;
+  // const filters = {
+  //   outletId,
+  // };
 };
 
 export const getAllInventoryDetailsService = async () => {

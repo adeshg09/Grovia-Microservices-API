@@ -1,9 +1,14 @@
 import axios from "axios";
 import { RESPONSE_ERROR_MESSAGES } from "../constants";
 import { envConfig } from "../config/env.config";
-import { createVendorOutletDto } from "../dtos/outlet.dtos";
+import {
+  createVendorOutletDto,
+  getAllOutletDetailsDto,
+  getNearestOutletDetailsByLocationCoordinatesDto,
+} from "../dtos/outlet.dtos";
 import { Outlet } from "../models/outlet.model";
 import { adminClient } from "../config/axios.config";
+import { getDistanceInKm } from "../utils";
 
 export const createVendorOutlet = async (
   createVendorOutletData: createVendorOutletDto,
@@ -18,6 +23,7 @@ export const createVendorOutlet = async (
     country,
     pincode,
     coordinates,
+    servingRadiusInKm,
     contactNumber,
   } = createVendorOutletData;
 
@@ -29,6 +35,7 @@ export const createVendorOutlet = async (
     !state ||
     !pincode ||
     !coordinates ||
+    !servingRadiusInKm ||
     !contactNumber
   ) {
     throw new Error(RESPONSE_ERROR_MESSAGES.REQUIRED_FIELDS);
@@ -46,6 +53,7 @@ export const createVendorOutlet = async (
       type: "Point",
       coordinates: [coordinates.latitude, coordinates.longitude],
     },
+    servingRadiusInKm,
     contactNumber,
   });
   await outlet.save();
@@ -96,17 +104,34 @@ export const getOutletDetailsByAdminIdService = async (adminId: string) => {
   return outletData ? outletData : null;
 };
 
-export const getAllOutletDetailsService = async (
-  token: string,
-  city?: string
-) => {
-  const query: any = {};
-  if (city) query.city = city;
+export const getOutletsDetailByAdminIdsService = async (adminIds: string[]) => {
+  const outlets = await Outlet.find({ adminId: { $in: adminIds } });
 
-  const outletsData = await Outlet.find(query);
+  return outlets.map((outlet) => ({
+    id: outlet._id,
+    adminId: outlet.adminId,
+    name: outlet.name,
+    address: outlet.address,
+    city: outlet.city,
+    state: outlet.state,
+    country: outlet.country,
+    pincode: outlet.pincode,
+    location: outlet.location,
+    contactNumber: outlet.contactNumber,
+    status: outlet.status,
+    isActive: outlet.isActive,
+  }));
+};
+
+export const getAllOutletDetailsService = async (
+  // token: string,
+  queryParams: getAllOutletDetailsDto
+) => {
+  console.log("queryParams", queryParams);
+  const outletsData = await Outlet.find(queryParams);
 
   const outlets = await Promise.all(
-    outletsData.map(async (outlet) => {
+    outletsData.map(async (outlet: any) => {
       // const response = await adminClient.get(
       //   `/get-outlet-admin-profile-by-id/${outlet.adminId}`,
       //   token
@@ -138,4 +163,45 @@ export const getAllOutletDetailsService = async (
   );
 
   return { outlets };
+};
+
+export const getNearestOutletDetailsByLocationCoordinatesService = async (
+  queryParams: any
+) => {
+  const { latitude, longitude } = queryParams;
+
+  const userLocationCoordinates: [number, number] = [
+    parseFloat(longitude as string),
+    parseFloat(latitude as string),
+  ];
+
+  // Get outlets sorted by nearest first using MongoDB's $near
+  const allOutlets = await Outlet.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: userLocationCoordinates,
+        },
+        $maxDistance: 10000 * 1000,
+      },
+    },
+  });
+
+  const nearestOutletDetails = allOutlets.find((outlet: any) => {
+    const [outletLongitude, outletLatitude] = outlet.location.coordinates;
+    const distance = getDistanceInKm(userLocationCoordinates, [
+      outletLongitude,
+      outletLatitude,
+    ]);
+    return distance <= outlet.servingRadiusInKm;
+  });
+
+  if (!nearestOutletDetails) {
+    throw new Error(
+      JSON.stringify(RESPONSE_ERROR_MESSAGES.NEAREST_OUTLET_NOT_FOUND)
+    );
+  }
+
+  return nearestOutletDetails;
 };
